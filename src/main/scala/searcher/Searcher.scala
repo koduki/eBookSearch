@@ -19,6 +19,9 @@ class EBookJapanSearcher extends Searcher {
 
         val agent = new Mechanize()
         val page = agent.get("http://www.ebookjapan.jp/ebj/search.asp?q=" + encode(keyword) + "&ebj_desc=on")
+        
+        val text =page.get(Class("pagenavi"))
+        val pageCount = "(全)(.*?)(ページ)".r.findFirstMatchIn(text).get.group(2).toInt
 
         page.get(Id("main_line"))\\"li"
     }
