@@ -16,14 +16,31 @@ class EBookJapanSearcher extends Searcher {
         import cn.orz.pascal.scala.mechanize._
 
         def encode(keyword:String) = java.net.URLEncoder.encode(keyword, "SJIS")
+        def readPages(agent:Mechanize, url:String, pageCount:Int) = {
+            val blank = <blank /> \ "any"
+
+            (1 to pageCount).map{ i =>
+                val page = agent.get(url + "&page=" + i)
+                page.get(Id("main_line"))\\"li"
+            }.foldLeft(blank)((r, node) => r ++ node)
+        }
 
         val agent = new Mechanize()
-        val page = agent.get("http://www.ebookjapan.jp/ebj/search.asp?q=" + encode(keyword) + "&ebj_desc=on")
+        val queryUrl = "http://www.ebookjapan.jp/ebj/search.asp?s=6&sd=0&ebj_desc=on&q=" + encode(keyword)
+        val page = agent.get(queryUrl)
         
-        val text =page.get(Class("pagenavi"))
+        val text = page.get(Class("pagenavi")).text
         val pageCount = "(全)(.*?)(ページ)".r.findFirstMatchIn(text).get.group(2).toInt
 
-        page.get(Id("main_line"))\\"li"
+        println("----------------------")
+        println(page.url)
+        println(keyword)
+        println(encode(keyword))
+        println(text)
+        println(pageCount)
+        println("----------------------")
+       
+        readPages(agent, queryUrl, pageCount)
     }
 
     def parse(item_nodes:scala.xml.NodeSeq):List[Item] = {
