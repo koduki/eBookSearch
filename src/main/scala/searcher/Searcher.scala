@@ -12,6 +12,21 @@ class EBookJapanSearcher extends Searcher {
         parse(read(keyword))
     }
 
+    def getNewBooks():List[Item] = {
+        import cn.orz.pascal.scala.mechanize._
+        val agent = new Mechanize()
+
+        def get(pageNum:Int) = {
+            val page  = agent.get("http://www.ebookjapan.jp/ebj/newlist.asp?genre_request=0&page=" + pageNum.toString)
+            val main_line = page.get(Id("main_line"))
+            val item_nodes = (main_line \\ "li").filter(item => (item \ "@class" text) == "heightLineChangeable")
+
+            parse(item_nodes)
+        }
+
+        (1 to 5).map(get(_)).toList.flatten
+    }
+
     def read(keyword:String):scala.xml.NodeSeq = {
         import cn.orz.pascal.scala.mechanize._
 
@@ -56,4 +71,5 @@ class EBookJapanSearcher extends Searcher {
              )
         ).toList
     }
+
 }
