@@ -1,4 +1,14 @@
-# example
-    import cn.orz.pascal.scala.ebooksearch.searcher._
-    val agent = new EBookJapanSearcher()
-    val items = agent.search("魔法")
+1. Launch [SBT](http://code.google.com/p/simple-build-tool).
+
+        ./sbt
+
+2. Run Jetty
+
+        jetty-run
+
+3. Go to http://localhost:8080/.
+
+4. Learn more at http://www.scalatra.org/stable/book.
+
+5. Happy hacking!
+
