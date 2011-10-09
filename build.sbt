@@ -20,5 +20,11 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test"
 
 libraryDependencies += "cn.orz.pascal" %% "mechanize" % "0.1"
 
+libraryDependencies += "com.novus" %% "salat-core" % "0.0.8-SNAPSHOT" 
+
 resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
+resolvers += "repo.novus rels" at "http://repo.novus.com/releases/"
+
+resolvers += "repo.novus snaps" at "http://repo.novus.com/snapshots/"
+ 

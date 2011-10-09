@@ -20,6 +20,9 @@ class Application extends ScalatraServlet with ScalateSupport {
     val agent = new EBookJapanSearcher()
     val items = agent.search(query)
 
+    import models._
+    QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
+
     jade("search", "items" -> items)
   }
 
