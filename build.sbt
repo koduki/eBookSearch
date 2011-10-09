@@ -20,8 +20,5 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test"
 
 libraryDependencies += "cn.orz.pascal" %% "mechanize" % "0.1"
 
-resolvers += Classpaths.typesafeResolver
-
 resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
-addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse" % "1.4.0")

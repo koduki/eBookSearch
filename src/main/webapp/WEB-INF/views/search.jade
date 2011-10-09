@@ -1,10 +1,8 @@
--@var foo:String = "test2"
-
+-@ val items: List[cn.orz.pascal.scala.ebooksearch.searcher.Item]
 
 form#search{:action => "/search", :method => "post"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}
-p #{foo}
 ul#resultt
   li
     a(href="a")
