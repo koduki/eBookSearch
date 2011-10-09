@@ -3,6 +3,7 @@ package cn.orz.pascal.scala.ebooksearch.web
 import org.scalatra._
 import java.net.URL
 import scalate.ScalateSupport
+import cn.orz.pascal.scala.ebooksearch.models._
 
 class Application extends ScalatraServlet with ScalateSupport {
   beforeAll {
@@ -20,7 +21,6 @@ class Application extends ScalatraServlet with ScalateSupport {
     val agent = new EBookJapanSearcher()
     val items = agent.search(query)
 
-    import models._
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 
     jade("search", "items" -> items)

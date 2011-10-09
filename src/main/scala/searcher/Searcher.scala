@@ -1,9 +1,7 @@
 package cn.orz.pascal.scala.ebooksearch.searcher
+import cn.orz.pascal.scala.ebooksearch.models._
 
-// vim: set ts=4 sw=4 et:
-case class Provider(name:String, url:String)
-case class Item(title:String, url:String, value:Int, author:String, author_url:String, image_url:String, provider:Provider)
-
+// vim: set ts=2 sw=2 et:
 trait Searcher { def search(keyword:String):List[Item] }
 class EBookJapanSearcher extends Searcher {
     val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
