@@ -1,9 +1,12 @@
 -@ val items: List[cn.orz.pascal.scala.ebooksearch.searcher.Item]
-
-form#search{:action => "/search", :method => "post"}
-  input#q{:type => "text", :name => "q"} 
+-@ val query:String = params("q")
+form#search{:action => "/search", :method => "get"}
+  input#q{:type => "text", :name => "q", :value => query} 
   input{:type =>"submit", :value => "search"}
+p counts:#{items.size}
 ul#resultt
-  li
-    a(href="a")
-      | Title:AAA
+  - for(item <- items)
+    li
+      a(href="#{item.url}")
+        | #{item.title} - #{item.author} - #{item.provider.name}
+    
