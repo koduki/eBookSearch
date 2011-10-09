@@ -5,7 +5,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 	<servlet>
 		<servlet-name>scalatra</servlet-name>
 		<servlet-class>
-			Application
+			cn.orz.pascal.scala.ebooksearch.web.Application
 		</servlet-class>
 	</servlet>
 
@@ -15,9 +15,9 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 	</servlet-mapping>
 	
 	<servlet-mapping>
-                <servlet-name>default</servlet-name>
-                <url-pattern>/img/*</url-pattern>
-                <url-pattern>/css/*</url-pattern>
-                <url-pattern>/js/*</url-pattern>
-        </servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/img/*</url-pattern>
+        <url-pattern>/css/*</url-pattern>
+        <url-pattern>/js/*</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -1,6 +1,10 @@
+-@var foo:String = "test2"
+
+
 form#search{:action => "/search", :method => "post"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}
+p #{foo}
 ul#resultt
   li
     a(href="a")

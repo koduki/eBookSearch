@@ -2,7 +2,7 @@ p
   | eBook Search へ　ようこそ.
   br/
   | このサイトでは電子書籍の横断検索ができます.
-form#search{:action => "/search", :method => "post"}
+form#search{:action => "/search", :method => "get"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}
 

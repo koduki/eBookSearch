@@ -1,3 +1,5 @@
+package cn.orz.pascal.scala.ebooksearch.web
+
 import org.scalatra._
 import java.net.URL
 import scalate.ScalateSupport
@@ -10,8 +12,19 @@ class Application extends ScalatraServlet with ScalateSupport {
   }
 
   get("search") {
+    val query = params('q)
+
+    import cn.orz.pascal.scala.ebooksearch.searcher._
+    //val agent = new EBookJapanSearcher()
+    //val items = agent.search(query)
+
+
     contentType = "text/html"
-    layoutTemplate("search")
+  //layoutTemplate("search", ("items" -> 1),( "a" ->  3))
+//        templateAttributes("foo") = "from template attributes"
+
+        jade("search", "foo" -> "Configurable")
+
   }
 
   notFound {
