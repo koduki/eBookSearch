@@ -11,7 +11,10 @@
    </New>
    <New id="wac" class="org.eclipse.jetty.plus.jndi.Resource">
      <Arg>tm/MyTimerManager</Arg>
-     <Arg><New class="de.myfoo.commonj.timers.FooTimerManagerFactory" /></Arg>
+     <Arg>
+     <New class="de.myfoo.commonj.timers.FooTimerManagerFactory">
+    </New>
+     </Arg>
    </New>   
 </Configure>
 
