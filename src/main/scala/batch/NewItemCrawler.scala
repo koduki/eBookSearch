@@ -4,11 +4,7 @@ package cn.orz.pascal.scala.ebooksearch.batch
 import cn.orz.pascal.scala.ebooksearch.searcher._
 import cn.orz.pascal.scala.ebooksearch.models._
 
-object NewItemCrawler {
-  def main(args:Array[String]) {
-    println("hello") 
-  }
-
+class NewItemCrawler {
   def crawl() {
     val searcher = new EBookJapanSearcher()
     val items = searcher.getNewBooks
