@@ -16,6 +16,14 @@ libraryDependencies ++= Seq(
   "org.clapper" % "sbt-markdown-plugin" % "0.3.1"
 )
 
+libraryDependencies ++= Seq(
+  "ch.qos.logback" % "logback-core" % "0.9.30",
+  "ch.qos.logback" % "logback-classic" % "0.9.30",
+  "org.slf4j" % "slf4j-simple" % "1.6.2"
+)
+
+
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test"
 
 libraryDependencies += "cn.orz.pascal" %% "mechanize" % "0.1"

@@ -1,9 +1,10 @@
 package cn.orz.pascal.scala.ebooksearch.searcher
 import cn.orz.pascal.scala.ebooksearch.models._
+import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
 
 // vim: set ts=2 sw=2 et:
 trait Searcher { def search(keyword:String):List[Item] }
-class EBookJapanSearcher extends Searcher {
+class EBookJapanSearcher extends Searcher with LoggingSupport {
     val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
 
     def search(keyword:String):List[Item] = {
@@ -45,13 +46,7 @@ class EBookJapanSearcher extends Searcher {
         val text = page.get(Class("pagenavi")).text
         val pageCount = "(全)(.*?)(ページ)".r.findFirstMatchIn(text).get.group(2).toInt
 
-        println("----------------------")
-        println(page.url)
-        println(keyword)
-        println(encode(keyword))
-        println(text)
-        println(pageCount)
-        println("----------------------")
+        debug("url:%s, keyword:%s, encode:%s, text:%s, count:%d".format(page.url, keyword, encode(keyword), text, pageCount).replaceAll("\n", ""))
        
         readPages(agent, queryUrl, pageCount)
     }

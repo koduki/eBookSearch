@@ -5,8 +5,12 @@ import java.net.URL
 import scalate.ScalateSupport
 import com.mongodb.casbah.commons._
 import cn.orz.pascal.scala.ebooksearch.models._
+import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
 
-class Application extends ScalatraServlet with ScalateSupport {
+import ch.qos.logback._
+import org.slf4j._
+
+class Application extends ScalatraServlet with ScalateSupport with LoggingSupport {
   beforeAll {
     contentType = "text/html"
   }
