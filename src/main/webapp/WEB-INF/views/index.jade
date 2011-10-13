@@ -1,3 +1,4 @@
+-@ val feeds: List[cn.orz.pascal.scala.ebooksearch.models.FeedItem]
 p
   | eBook Search へ　ようこそ.
   br/
@@ -5,4 +6,9 @@ p
 form#search{:action => "/search", :method => "get"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}
-
+p 新着
+ul#resultt
+  - for(feed <- feeds)
+    li 
+      a(href="#{feed.item.url}")
+        | #{feed.createdAt} #{feed.item.title} - #{feed.item.author} - #{feed.item.provider.name}
