@@ -3,8 +3,14 @@ import cn.orz.pascal.scala.ebooksearch.models._
 import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
 
 // vim: set ts=2 sw=2 et:
-class BookWalkerSearchAgent extends SearchAgent with LoggingSupport {
-    val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
+class NicoSeigaSearchAgent extends SearchAgent with LoggingSupport {
+    val provider = Provider("ニコニコ静画(電子書籍)", "http://seiga.nicovideo.jp/book/?track=global_navi_top")
+    implicit def nodeSeq2richNodeSeq(nodes:scala.xml.NodeSeq) = {
+      new {
+        def attr(name:String, value:String) = nodes.filter(node => (node \ name).text == value)
+      } 
+    }
+
 
     def search(keyword:String):List[Item] = {
         parse(read(keyword))
@@ -28,22 +34,22 @@ class BookWalkerSearchAgent extends SearchAgent with LoggingSupport {
     def read(keyword:String):scala.xml.NodeSeq = {
         import cn.orz.pascal.scala.mechanize._
 
-        def encode(keyword:String) = java.net.URLEncoder.encode(keyword, "SJIS")
+        def encode(keyword:String) = java.net.URLEncoder.encode(keyword, "UTF-8")
         def readPages(agent:Mechanize, url:String, pageCount:Int) = {
             val blank = <blank /> \ "any"
 
             (1 to pageCount).map{ i =>
                 val page = agent.get(url + "&page=" + i)
-                page.get(Id("main_line"))\\"li"
+                (page.get(Id("bk_article"))\\"li").attr("@class", "bk_book_entry")
             }.foldLeft(blank)((r, node) => r ++ node)
         }
 
         val agent = new Mechanize()
-        val queryUrl = "http://www.ebookjapan.jp/ebj/search.asp?s=6&sd=0&ebj_desc=on&q=" + encode(keyword)
+        val queryUrl = "http://seiga.nicovideo.jp/search/" + encode(keyword) + "?target=book&track=seiga_book_keyword";
         val page = agent.get(queryUrl)
         
-        val text = page.get(Class("pagenavi")).text
-        val pageCount = "(全)(.*?)(ページ)".r.findFirstMatchIn(text).get.group(2).toInt
+        val text = ""//((page.get(Id("main_area_all"))\\("ul")).attr("@class", "bk_pagenation") \ "li").text
+        val pageCount = (((page.get(Id("main_area_all"))\\("ul")).attr("@class", "bk_pagenation"))(0)\("li")).size - 2
 
         debug("url:%s, keyword:%s, encode:%s, text:%s, count:%d".format(page.url, keyword, encode(keyword), text, pageCount).replaceAll("\n", ""))
        
@@ -51,14 +57,15 @@ class BookWalkerSearchAgent extends SearchAgent with LoggingSupport {
     }
 
     def parse(item_nodes:scala.xml.NodeSeq):List[Item] = {
+        val baseUrl = "http://seiga.nicovideo.jp";
         item_nodes.map( item =>
             Item(
-                (item \ "h5" \ "a").text.trim,
-                "http://www.ebookjapan.jp" + (item \ "h5" \ "a" \ "@href").text,
-                (item \ "h6")(0).child(0).text.trim.replaceAll("円.*", "").toInt,
-                ((item\"div")(1)\"a").text.trim,
-                "http://www.ebookjapan.jp" + ((item\"div")(1)\"a"\"@href").text,
-                (item \\ "img" \ "@src").text,
+                ((item \\ "li").attr("@class", "bk_title") \ "a").text.trim,
+                baseUrl + ((item \\ "li").attr("@class", "bk_title") \ "a" \ "@href").text,
+                -1,
+                ((item \\ "li").attr("@class", "bk_author") \ "a")(0).text.trim,
+                baseUrl + (((item \\ "li").attr("@class", "bk_author") \ "a")(0)\"@href").text,
+                baseUrl + ((item \\ "div").attr("@class", "bk_list") \\ "@src").text,
                 provider
              )
         ).toList
