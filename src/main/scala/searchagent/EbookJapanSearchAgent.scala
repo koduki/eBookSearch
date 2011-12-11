@@ -1,10 +1,9 @@
-package cn.orz.pascal.scala.ebooksearch.searcher
+package cn.orz.pascal.scala.ebooksearch.searchagent
 import cn.orz.pascal.scala.ebooksearch.models._
 import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
 
 // vim: set ts=2 sw=2 et:
-trait Searcher { def search(keyword:String):List[Item] }
-class EBookJapanSearcher extends Searcher with LoggingSupport {
+class EBookJapanSearchAgent extends SearchAgent with LoggingSupport {
     val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
 
     def search(keyword:String):List[Item] = {

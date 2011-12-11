@@ -25,8 +25,8 @@ class Application extends ScalatraServlet with ScalateSupport with LoggingSuppor
   get("/search") {
     val query = params('q)
 
-    import cn.orz.pascal.scala.ebooksearch.searcher._
-    val agent = new EBookJapanSearcher()
+    import cn.orz.pascal.scala.ebooksearch.searchagent._
+    val agent = new EBookJapanSearchAgent()
     val items = agent.search(query)
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))

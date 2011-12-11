@@ -4,13 +4,13 @@
 
 1. Launch [SBT](http://code.google.com/p/simple-build-tool).
 
-        ./sbt
+        sbt
 
 2. Run Jetty
 
         container:start
         container:stop 
-
+        ~compile
 3. Go to http://localhost:8080/.
 
 
