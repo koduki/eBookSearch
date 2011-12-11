@@ -48,10 +48,10 @@ class NicoSeigaSearchAgent extends SearchAgent with LoggingSupport {
         val queryUrl = "http://seiga.nicovideo.jp/search/" + encode(keyword) + "?target=book&track=seiga_book_keyword";
         val page = agent.get(queryUrl)
         
-        val text = ""//((page.get(Id("main_area_all"))\\("ul")).attr("@class", "bk_pagenation") \ "li").text
-        val pageCount = (((page.get(Id("main_area_all"))\\("ul")).attr("@class", "bk_pagenation"))(0)\("li")).size - 2
+        val pager =(page.get(Id("main_area_all"))\\("ul")).attr("@class", "bk_pagenation")
+        val pageCount = if (pager.size != 0){ (pager(0)\("li")).size - 2 } else { -1 }
 
-        debug("url:%s, keyword:%s, encode:%s, text:%s, count:%d".format(page.url, keyword, encode(keyword), text, pageCount).replaceAll("\n", ""))
+        debug("url:%s, keyword:%s, encode:%s, count:%d".format(page.url, keyword, encode(keyword), pageCount).replaceAll("\n", ""))
        
         readPages(agent, queryUrl, pageCount)
     }

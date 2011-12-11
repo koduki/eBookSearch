@@ -41,11 +41,14 @@ class EBookJapanSearchAgent extends SearchAgent with LoggingSupport {
         val agent = new Mechanize()
         val queryUrl = "http://www.ebookjapan.jp/ebj/search.asp?s=6&sd=0&ebj_desc=on&q=" + encode(keyword)
         val page = agent.get(queryUrl)
-        
-        val text = page.get(Class("pagenavi")).text
-        val pageCount = "(全)(.*?)(ページ)".r.findFirstMatchIn(text).get.group(2).toInt
+        val navi = page.get(Class("pagenavi"))
+        val pageCount = if (navi != null) {
+            "(全)(.*?)(ページ)".r.findFirstMatchIn(navi.text).get.group(2).toInt
+        } else {
+          -1
+        }
 
-        debug("url:%s, keyword:%s, encode:%s, text:%s, count:%d".format(page.url, keyword, encode(keyword), text, pageCount).replaceAll("\n", ""))
+        debug("url:%s, keyword:%s, encode:%s, count:%d".format(page.url, keyword, encode(keyword), pageCount).replaceAll("\n", ""))
        
         readPages(agent, queryUrl, pageCount)
     }
