@@ -7,7 +7,9 @@ import cn.orz.pascal.scala.ebooksearch.models._
 class NewItemCrawler {
   def crawl() {
     val ebookJapan = new EBookJapanSearchAgent()
-    val items = ebookJapan.getNewBooks
+    val nicoSeiga = new NicoSeigaSearchAgent()
+    val items = ebookJapan.getNewBooks ++ nicoSeiga.getNewBooks
+
     for(item <- items) {
       FeedItemDao.insert(FeedItem(item, new java.util.Date()))
     }

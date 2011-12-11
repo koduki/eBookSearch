@@ -18,7 +18,7 @@ class NewItemCrawlerJob extends Job with LoggingSupport {
   }
 }
 object NewItemCrawlerJob {
-  def schdule = simpleSchedule.repeatForever.withIntervalInHours(3)
+  def schdule = simpleSchedule.repeatForever.withIntervalInHours(24)
 }
 
 class TaskScheduler extends HttpServlet {

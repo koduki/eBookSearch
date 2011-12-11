@@ -11,7 +11,6 @@ class NicoSeigaSearchAgent extends SearchAgent with LoggingSupport {
       } 
     }
 
-
     def search(keyword:String):List[Item] = {
         parse(read(keyword))
     }
@@ -19,16 +18,48 @@ class NicoSeigaSearchAgent extends SearchAgent with LoggingSupport {
     def getNewBooks():List[Item] = {
         import cn.orz.pascal.scala.mechanize._
         val agent = new Mechanize()
+        val baseUrl = "http://seiga.nicovideo.jp"
 
-        def get(pageNum:Int) = {
-            val page  = agent.get("http://www.ebookjapan.jp/ebj/newlist.asp?genre_request=0&page=" + pageNum.toString)
-            val main_line = page.get(Id("main_line"))
-            val item_nodes = (main_line \\ "li").filter(item => (item \ "@class" text) == "heightLineChangeable")
-
-            parse(item_nodes)
+        def getItems(page:HtmlPage) = {
+          (page.get(Id("bk_article"))\\"div").attr("@class", "bk_list").map(item => ((item\\"@href").text, (item\\("@src")).text))
         }
 
-        (1 to 5).map(get(_)).toList.flatten
+        def getItemInfo(item:(String, String)) = {
+          val page = agent.get(baseUrl + item._1)
+              
+          val title = (page.get(Id("bk_article"))\"div"\"h2").text.trim
+          val author = (page.get(Class("bk_author"))\"a").text.trim
+          val author_url = (page.get(Class("bk_author"))\"a"\"@href").text.trim
+          val value = ((page.get(Id("bk_book_info_details"))\"ul")(1)\"li")(3).text.trim.replaceFirst("値段: ", "").replaceFirst("円", "").toInt
+              
+          val updateAt = (page.get(Id("bk_article"))\"div"\"div")(0).text.trim.split(" ")(0)
+
+          (updateAt, Item(title, baseUrl + item._1, value, author, author_url, item._2, provider))
+        }
+            
+        def get(updateAt:String, count:Int):List[Item] = {
+          val page = agent.get("http://seiga.nicovideo.jp/book/list?sort=f&order=d&page=" + count)
+
+          val items = getItems(page)
+          val result = items.map(item => getItemInfo(item))
+
+          val feedCount = result.filter(item => item._1 == updateAt).size
+          
+          debug("page:%d, updateAt:%s, result_count:%d, feed_count:%d".format(count, updateAt, feedCount, result.size))
+
+          if (feedCount == result.size) {
+            result.map(item => item._2).toList ++ get(updateAt, count + 1)
+          } else {
+            result.map(item => item._2).toList
+          }
+        }
+
+        val list_page = agent.get("http://seiga.nicovideo.jp/book/list?sort=f&order=d&page=" + 1)
+        val item = getItems(list_page)(0)
+        val info_page = agent.get(baseUrl + item._1)
+        val updateAt = (info_page.get(Id("bk_article"))\"div"\"div")(0).text.trim.split(" ")(0)
+
+        get(updateAt, 1)
     }
 
     def read(keyword:String):scala.xml.NodeSeq = {
