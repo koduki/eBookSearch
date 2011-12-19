@@ -3,7 +3,7 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<servlet>
-		<servlet-name>scalatra</servlet-name>
+		<servlet-name>default</servlet-name>
 		<servlet-class>
 			cn.orz.pascal.scala.ebooksearch.web.Application
 		</servlet-class>
@@ -14,25 +14,11 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 		<servlet-class>
 			cn.orz.pascal.scala.ebooksearch.batch.TaskScheduler
 		</servlet-class>
-    <load-on-startup>0</load-on-startup>
+        <load-on-startup>0</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>scalatra</servlet-name>
+		<servlet-name>default</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
-	
-	<servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/img/*</url-pattern>
-        <url-pattern>/css/*</url-pattern>
-        <url-pattern>/js/*</url-pattern>
-   </servlet-mapping>
-
-   <resource-ref>
-     <res-ref-name>tm/MyTimerManager</res-ref-name>
-     <res-type>de.myfoo.commonj.timers.FooTimerManagerFactory</res-type>
-     <res-auth>Container</res-auth>
-     <res-sharing-scope>Shareable</res-sharing-scope>
-   </resource-ref>
 </web-app>
