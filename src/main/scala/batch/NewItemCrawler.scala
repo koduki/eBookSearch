@@ -10,7 +10,7 @@ class NewItemCrawler {
     val nicoSeiga = new NicoSeigaSearchAgent()
     val items = ebookJapan.getNewBooks ++ nicoSeiga.getNewBooks
 
-    for(item <- items) {
+    for (item <- items) {
       FeedItemDao.insert(FeedItem(item, new java.util.Date()))
     }
   }

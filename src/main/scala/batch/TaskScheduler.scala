@@ -25,7 +25,7 @@ class TaskScheduler extends HttpServlet {
   // スケジューラー作成
   val scheduler = StdSchedulerFactory.getDefaultScheduler();
 
-  def regist()  {
+  def regist() {
     // ジョブの作成
     val job = newJob(classOf[NewItemCrawlerJob]).build();
     val trigger = newTrigger().withSchedule(NewItemCrawlerJob.schdule).build();
@@ -37,7 +37,7 @@ class TaskScheduler extends HttpServlet {
   override def init() {
     try {
       scheduler.start();
-      regist() 
+      regist()
     } catch {
       case e: SchedulerException => e.printStackTrace()
     }
