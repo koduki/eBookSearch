@@ -17,20 +17,18 @@ class NewItemCrawlerJob extends Job with LoggingSupport {
     info("end clawling")
   }
 }
+
 object NewItemCrawlerJob {
   def schdule = simpleSchedule.repeatForever.withIntervalInHours(24)
 }
 
 class TaskScheduler extends HttpServlet {
-  // スケジューラー作成
   val scheduler = StdSchedulerFactory.getDefaultScheduler();
 
   def regist() {
-    // ジョブの作成
     val job = newJob(classOf[NewItemCrawlerJob]).build();
     val trigger = newTrigger().withSchedule(NewItemCrawlerJob.schdule).build();
 
-    // トリガーとともにジョブをスケジューラーに登録
     scheduler.scheduleJob(job, trigger);
   }
 

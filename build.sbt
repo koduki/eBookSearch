@@ -23,16 +23,21 @@ libraryDependencies ++= Seq(
 )
 
 
-
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test"
 
-libraryDependencies += "cn.orz.pascal" %% "mechanize" % "0.1"
+libraryDependencies += "cn.orz.pascal" %% "mechanize" % "0.2"
 
 libraryDependencies += "com.novus" %% "salat-core" % "0.0.8-SNAPSHOT" 
 
 libraryDependencies += "org.quartz-scheduler" % "quartz" % "2.0.2"
 
+//libraryDependencies += "se.fishtank" %% "css-selectors-scala" % "0.1.1"
+
+libraryDependencies += "cn.orz.pascal" %% "css-selectors-scala-uo" % "0.1.1"
+
 resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+
+resolvers += "Sonatype OSS Public" at "http://oss.sonatype.org/content/groups/public/"
 
 resolvers += "repo.novus rels" at "http://repo.novus.com/releases/"
 
