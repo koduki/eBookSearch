@@ -1,9 +1,9 @@
-package cn.orz.pascal.scala.ebooksearch.searchagent
+package cn.orz.pascal.scala.ebooksearch.agent
 import cn.orz.pascal.scala.ebooksearch.models._
 import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
 
 // vim: set ts=2 sw=2 et:
-class EBookJapanSearchAgent extends SearchAgent with LoggingSupport {
+class EBookJapanAgent extends Agent with LoggingSupport {
   val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
 
   def search(keyword: String): List[Item] = {
@@ -15,7 +15,10 @@ class EBookJapanSearchAgent extends SearchAgent with LoggingSupport {
     val agent = new Mechanize()
 
     def get(pageNum: Int) = {
-      val page = agent.get("http://www.ebookjapan.jp/ebj/newlist.asp?genre_request=0&page=" + pageNum.toString)
+      val url = "http://www.ebookjapan.jp/ebj/newlist.asp?genre_request=0&page=" + pageNum.toString
+      debug("url:%s".format(url))
+
+      val page = agent.get(url)
       val main_line = page.get(Id("main_line"))
       val item_nodes = (main_line \\ "li").filter(item => (item \ "@class" text) == "heightLineChangeable")
 

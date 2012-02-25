@@ -6,18 +6,19 @@ import scalate.ScalateSupport
 import com.mongodb.casbah.commons._
 import cn.orz.pascal.scala.ebooksearch.models._
 import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
-
+import cn.orz.pascal.scala.ebooksearch.utils.DateUtils._
+import cn.orz.pascal.scala.ebooksearch.agent._
 import ch.qos.logback._
 import org.slf4j._
 
-class Application extends ScalatraServlet with ScalateSupport with LoggingSupport {
+class WebFront extends ScalatraServlet with ScalateSupport with LoggingSupport {
   beforeAll {
     contentType = "text/html"
   }
 
   get("/") {
-    val feeds = FeedItemDao.find(MongoDBObject())
-                           .sort(orderBy = MongoDBObject("createdAt" -> -1))  
+    val feeds = FeedItemDao.find(MongoDBObject("createdAt" -> MongoDBObject("$gte" -> today)))
+    .sort(orderBy = MongoDBObject("createdAt" -> -1))  
                            .toList
     jade("index", "feeds" -> feeds)
   }
@@ -25,10 +26,11 @@ class Application extends ScalatraServlet with ScalateSupport with LoggingSuppor
   get("/search") {
     val query = params('q)
 
-    import cn.orz.pascal.scala.ebooksearch.searchagent._
-    val ebookjapan = new EBookJapanSearchAgent search(query)
-    val nicoseiga  = new NicoSeigaSearchAgent search(query)
-    val items = ebookjapan ++ nicoseiga
+    
+    val ebookjapan = new EBookJapanAgent search(query)
+    val nicoseiga  = new NicoSeigaAgent search(query)
+    val bookwalker = new BookWalkerAgent search(query)
+    val items = bookwalker ++ ebookjapan ++ nicoseiga
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 

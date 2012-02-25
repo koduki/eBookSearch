@@ -1,9 +1,9 @@
-package cn.orz.pascal.scala.ebooksearch.searchagent
+package cn.orz.pascal.scala.ebooksearch.agent
 import cn.orz.pascal.scala.ebooksearch.models._
 import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
 
 // vim: set ts=2 sw=2 et:
-class NicoSeigaSearchAgent extends SearchAgent with LoggingSupport {
+class NicoSeigaAgent extends Agent with LoggingSupport {
     val provider = Provider("ニコニコ静画(電子書籍)", "http://seiga.nicovideo.jp/book/?track=global_navi_top")
     implicit def nodeSeq2richNodeSeq(nodes:scala.xml.NodeSeq) = {
       new {
