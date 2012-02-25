@@ -10,12 +10,18 @@ trait SimpleAgent extends Agent with LoggingSupport {
   val provider:Provider
   
   def getNewBooks(): List[Item]
-  def search(keyword: String): List[Item] = parse(read(keyword))
+  def search(keyword: String): List[Item] = {
+    read(keyword) match {
+      case Some(nodes) => parse(nodes)
+      case None => List()
+    }
+    
+  }
 
   protected def encode(keyword: String) = java.net.URLEncoder.encode(keyword, "UTF-8")
   protected def getItemNodes(page: HtmlPage): NodeSeq
-  protected def read(keyword: String):NodeSeq
-  protected def parse(itemNodes: scala.xml.NodeSeq): List[Item]
+  protected def read(keyword: String):Option[NodeSeq]
+  protected def parse(itemNodes: NodeSeq): List[Item]
   protected def readPages(agent: Mechanize, url: String, pageCount: Int, pageOption: String):NodeSeq = {
     val blank = <blank/> \ "any"
     (1 to pageCount).map { i =>

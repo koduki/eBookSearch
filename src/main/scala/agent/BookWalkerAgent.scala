@@ -39,7 +39,7 @@ class BookWalkerAgent extends SimpleAgent {
     page.get(Id("section-search")) $ "[class=itemWrap]"
   }
 
-  override def read(keyword: String): NodeSeq = {
+  override def read(keyword: String): Option[NodeSeq] = {
     val agent = new Mechanize()
     val queryUrl = "http://bookwalker.jp/pc/search/?detail=1&order=rank&disp=30&word=" + encode(keyword) + "&inc=1";
     debug("url:%s, keyword:%s, encode:%s".format(queryUrl, keyword, encode(keyword)).replaceAll("\n", ""))
@@ -47,13 +47,17 @@ class BookWalkerAgent extends SimpleAgent {
     val page = agent.get(queryUrl)
 
     val pager = page.get(Class("pageSelect"))
-    val pageNumbers = (pager $ "li > a[class=page-numbers]").map { node => node.text.trim.toInt }
-    val pageCount = if (pageNumbers.isEmpty) { 1 } else { pageNumbers.max }
+    if (pager != null) {
+      val pageNumbers = (pager $ "li > a[class=page-numbers]").map { node => node.text.trim.toInt }
+      val pageCount = if (pageNumbers.isEmpty) { 1 } else { pageNumbers.max }
 
-    readPages(agent, queryUrl, pageCount, "&page=")
+      Some(readPages(agent, queryUrl, pageCount, "&page="))
+    } else {
+      None
+    }
   }
 
-  override def parse(itemNodes: scala.xml.NodeSeq): List[Item] = {
+  override def parse(itemNodes: NodeSeq): List[Item] = {
     itemNodes.map { node =>
       val title = (node $ "[class=detail] > [class=title] > a").text.trim
       val url = (node $ "[class=detail] > [class=title] > a")(0).attribute("href") match { case Some(x) => x.text; case _ => "" }
@@ -64,6 +68,7 @@ class BookWalkerAgent extends SimpleAgent {
 
       Item(title, url, value, author, author_url, image_url, provider)
     }.toList
+
   }
 
 }
