@@ -30,7 +30,8 @@ class WebFront extends ScalatraServlet with ScalateSupport with LoggingSupport {
     val ebookjapan = new EBookJapanAgent search(query)
     val nicoseiga  = new NicoSeigaAgent search(query)
     val bookwalker = new BookWalkerAgent search(query)
-    val items = bookwalker ++ ebookjapan ++ nicoseiga
+    val paburi = new PaburiAgent search(query)
+    val items = paburi ++ bookwalker ++ nicoseiga ++ ebookjapan
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 
