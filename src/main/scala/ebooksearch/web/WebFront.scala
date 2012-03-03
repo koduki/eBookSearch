@@ -10,28 +10,31 @@ import cn.orz.pascal.scala.commons.utils.DateUtils._
 import cn.orz.pascal.scala.ebooksearch.agent._
 import ch.qos.logback._
 import org.slf4j._
+import scala.actors.Futures._
 
-class WebFront extends ScalatraServlet with ScalateSupport with LoggingSupport {
+class WebFront extends EBookSearchServlet {
   beforeAll {
     contentType = "text/html"
   }
 
   get("/") {
-    val feeds = FeedItemDao.find(MongoDBObject("createdAt" -> MongoDBObject("$gte" -> today)))
-    .sort(orderBy = MongoDBObject("createdAt" -> -1))  
-                           .toList
+    val feeds = FeedItemDao
+      .find(MongoDBObject("createdAt" -> MongoDBObject("$gte" -> today)))
+      .sort(orderBy = MongoDBObject("createdAt" -> -1))
+      .toList
     jade("index", "feeds" -> feeds)
   }
 
   get("/search") {
     val query = params('q)
-
-    
-    val ebookjapan = new EBookJapanAgent search(query)
-    val nicoseiga  = new NicoSeigaAgent search(query)
-    val bookwalker = new BookWalkerAgent search(query)
-    val paburi = new PaburiAgent search(query)
-    val items = paburi ++ bookwalker ++ nicoseiga ++ ebookjapan
+    val items = List(
+      new EBookJapanAgent,
+      new NicoSeigaAgent,
+      new BookWalkerAgent,
+      new PaburiAgent)
+      .map(x => future{ x.search(query) })
+      .map(_())
+      .fold(List[Item]()) { (r, item) => r ++ item }
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 
@@ -42,6 +45,6 @@ class WebFront extends ScalatraServlet with ScalateSupport with LoggingSupport {
     findTemplate(requestPath) map { path =>
       contentType = "text/html"
       layoutTemplate(path)
-    } orElse serveStaticResource() getOrElse resourceNotFound() 
+    } orElse serveStaticResource() getOrElse resourceNotFound()
   }
 }

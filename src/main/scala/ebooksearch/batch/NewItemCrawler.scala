@@ -9,7 +9,7 @@ class NewItemCrawler {
     val ebookJapan = new EBookJapanAgent
     val nicoSeiga = new NicoSeigaAgent
     val bookWalker = new BookWalkerAgent
-    val items =  bookWalker.getNewBooks ++ 
+    val items = bookWalker.getNewBooks ++ 
     ebookJapan.getNewBooks ++ 
     //nicoSeiga.getNewBooks
     List()
