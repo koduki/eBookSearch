@@ -11,8 +11,12 @@
         container:start
         container:stop 
         ~compile
+
 3. Go to http://localhost:8080/.
 
+4. Make war.
+
+        sbt package
 
 5. Happy hacking!
 
