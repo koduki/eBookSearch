@@ -7,7 +7,7 @@ import org.quartz.impl.StdSchedulerFactory
 import org.quartz.JobBuilder.newJob
 import org.quartz.TriggerBuilder.newTrigger
 import org.quartz.SimpleScheduleBuilder.simpleSchedule
-import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
+import cn.orz.pascal.scala.commons.utils.LoggingSupport
 
 class NewItemCrawlerJob extends Job with LoggingSupport {
   def execute(context: JobExecutionContext) {

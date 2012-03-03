@@ -1,4 +1,4 @@
-package cn.orz.pascal.scala.ebooksearch.utils
+package cn.orz.pascal.scala.commons.utils
 // vim: set ts=2 sw=2 et:
 
 import ch.qos.logback._
@@ -6,7 +6,7 @@ import org.slf4j._
 
 trait LoggingSupport {
   val logger = LoggerFactory.getLogger(this.getClass)
-  def toString2(message:Any):String = if (message == null){ "" } else { message.toString }
+  private def toString2(message:Any):String = if (message == null){ "" } else { message.toString }
 
   def debug(message:String) = logger.debug(message)
   def debug(message:Any) = logger.debug(toString2(message))

@@ -1,6 +1,6 @@
 package cn.orz.pascal.scala.ebooksearch.agent
 import cn.orz.pascal.scala.ebooksearch.models._
-import cn.orz.pascal.scala.ebooksearch.utils.LoggingSupport
+import cn.orz.pascal.scala.commons.utils.LoggingSupport
 import se.fishtank.css.selectors.Selectors._
 import cn.orz.pascal.scala.mechanize._
 import scala.xml.NodeSeq

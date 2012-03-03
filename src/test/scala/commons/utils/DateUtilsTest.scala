@@ -1,10 +1,11 @@
-package cn.orz.pascal.scala.ebooksearch.utils
+package cn.orz.pascal.scala.commons.utils
 // vim: set ts=4 sw=4 et:
 import org.scalatest.WordSpec
 import org.scalatest.matchers.ShouldMatchers
 import java.text.SimpleDateFormat
 import java.text.ParseException
 import java.util.Calendar
+
 class DateUtilsTest extends WordSpec with ShouldMatchers {
   import DateUtils._
   "date" should {
