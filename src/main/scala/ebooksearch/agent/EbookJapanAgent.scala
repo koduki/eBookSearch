@@ -6,11 +6,11 @@ import cn.orz.pascal.scala.commons.utils.LoggingSupport
 class EBookJapanAgent extends Agent with LoggingSupport {
   val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
 
-  def search(keyword: String): List[Item] = {
+  override def search(keyword: String): List[Item] = {
     parse(read(keyword))
   }
 
-  def getNewBooks(): List[Item] = {
+  override def getNewItems(): List[Item] = {
     import cn.orz.pascal.scala.mechanize._
     val agent = new Mechanize()
 

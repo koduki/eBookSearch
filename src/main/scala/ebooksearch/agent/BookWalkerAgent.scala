@@ -8,10 +8,7 @@ import cn.orz.pascal.scala.commons.utils.XmlUtils._
 // vim: set ts=2 sw=2 et:
 class BookWalkerAgent extends SimpleAgent {
   override val provider = Provider("BOOK☆WALKER", "http://bookwalker.jp/")
-
-
-  
-  def getNewBooks(): List[Item] = {
+  override def getNewItems(): List[Item] = {
     val agent = new Mechanize()
     val page = agent.get("http://bookwalker.jp/pc/new/")
     val nodes = page.get(Class("sectionWrap")) $ "[class=itemWrap]"

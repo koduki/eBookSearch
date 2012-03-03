@@ -9,8 +9,8 @@ import scala.xml.NodeSeq
 trait SimpleAgent extends Agent with LoggingSupport {
   val provider: Provider
 
-  def getNewBooks(): List[Item]
-  def search(keyword: String): List[Item] = {
+  override def getNewItems(): List[Item]
+  override def search(keyword: String): List[Item] = {
     read(keyword) match {
       case Some(nodes) => parse(nodes)
       case None => List()

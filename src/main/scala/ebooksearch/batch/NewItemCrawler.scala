@@ -6,14 +6,13 @@ import cn.orz.pascal.scala.ebooksearch.models._
 
 class NewItemCrawler {
   def crawl() {
-    val ebookJapan = new EBookJapanAgent
-    val nicoSeiga = new NicoSeigaAgent
-    val bookWalker = new BookWalkerAgent
-    val items = bookWalker.getNewBooks ++ 
-    ebookJapan.getNewBooks ++ 
-    //nicoSeiga.getNewBooks
-    List()
+    val agents = List(
+      new EBookJapanAgent,
+//      new NicoSeigaAgent,
+      new BookWalkerAgent,
+      new PaburiAgent)
 
+    val items = agents.map { _.getNewItems() }.fold(List[Item]()) { (r, x) => r ++ x }
     for (item <- items) {
       FeedItemDao.insert(FeedItem(item, new java.util.Date()))
     }

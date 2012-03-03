@@ -5,5 +5,5 @@ import cn.orz.pascal.scala.commons.utils.LoggingSupport
 // vim: set ts=2 sw=2 et:
 trait Agent {
   def search(keyword: String): List[Item]
-  def getNewBooks(): List[Item]
+  def getNewItems(): List[Item]
 }
