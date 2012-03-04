@@ -13,6 +13,22 @@ import org.slf4j._
 import scala.actors.Futures._
 
 class WebFront extends EBookSearchServlet {
+  def validateParam(name: String, default: Boolean) = {
+    if (params.contains(name) && (params(name).matches("[01]"))) {
+      params(name) == "1"
+    } else {
+      default
+    }
+  }
+
+  def validateParam(name: String, default: Int) = {
+    if (params.contains(name) && params(name).matches("""\d""")) {
+      params(name).toInt
+    } else {
+      default
+    }
+  }
+
   beforeAll {
     contentType = "text/html"
   }
@@ -27,17 +43,31 @@ class WebFront extends EBookSearchServlet {
 
   get("/search") {
     val query = params('q)
+    val pageNumber = validateParam("page", 1)
+    var hasNextBKW = validateParam("bkw", true)
+    var hasNextPBR = validateParam("pbr", true)
+    var hasNextEBJ = validateParam("ebj", true)
+
     val results = List(
-      new EBookJapanAgent,
       new BookWalkerAgent,
-      new PaburiAgent)
-      .map(x => future{ x.search(query, 1) })
+      new PaburiAgent,
+      new EBookJapanAgent)
+      .map(x => future { x.search(query, pageNumber) })
       .map(_())
-    val items = results.map{ x => x._1}.fold(List[Item]()) { (r, item) => r ++ item }
+    val items = results.map { x => x._1 }.fold(List[Item]()) { (r, item) => r ++ item }
+    val hasNexts = results.map { x => x._2 }
+    hasNextBKW = hasNexts(0)
+    hasNextPBR = hasNexts(1)
+    hasNextEBJ = hasNexts(2)
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 
-    jade("search", "items" -> items)
+    jade("search",
+      "items" -> items,
+      "pageNumber" -> pageNumber,
+      "nextBkw" -> (if (hasNextBKW) { 1 } else { 0 }),
+      "nextEbj" -> (if (hasNextEBJ) { 1 } else { 0 }),
+      "nextPbr" -> (if (hasNextPBR) { 1 } else { 0 }))
   }
 
   notFound {

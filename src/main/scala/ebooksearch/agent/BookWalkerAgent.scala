@@ -41,10 +41,9 @@ class BookWalkerAgent extends SimpleAgent {
     debug("url:%s, keyword:%s, encode:%s".format(queryUrl, keyword, utf8(keyword)).replaceAll("\n", ""))
 
     val page = agent.get(queryUrl)
-
+      Thread.sleep(1500)
     val pager = page.get(Class("pageSelect"))
     if (pager != null) {
-      Thread.sleep(800)
       this._hasNext = (!((pager $ "li").isEmpty) && !((pager $ "li").last \ "a").isEmpty)
       val nodes = page.get(Id("section-search")) $ "[class=itemWrap]"
       debug("found :" + keyword + ", size:" + nodes.size)

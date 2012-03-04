@@ -1,9 +1,20 @@
 -@ val items: List[cn.orz.pascal.scala.ebooksearch.models.Item]
 -@ val query:String = params("q")
+-@ val pageNumber:Int
+-@ val nextBkw:Int
+-@ val nextEbj:Int
+-@ val nextPbr:Int
 form#search{:action => "/search", :method => "get"}
-  input#q{:type => "text", :name => "q", :value => query} 
+  input#q{:type => "text", :name => "q", :value => query}
+  input#bkw{:type => "hidden", :name => "bkw", :value => nextBkw}
+  input#ebj{:type => "hidden", :name => "ebj", :value => nextEbj}
+  input#pbr{:type => "hidden", :name => "pbr", :value => nextPbr}
   input{:type =>"submit", :value => "search"}
 p counts:#{items.size}
+-if(nextBkw == 1 || nextEbj == 1 || nextPbr == 1)
+  a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+    span next
+
 ul#resultt
   - for(item <- items)
     li
