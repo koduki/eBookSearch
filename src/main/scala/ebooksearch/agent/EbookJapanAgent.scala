@@ -1,17 +1,17 @@
 package cn.orz.pascal.scala.ebooksearch.agent
 import cn.orz.pascal.scala.ebooksearch.models._
-import cn.orz.pascal.scala.commons.utils.LoggingSupport
+import cn.orz.pascal.scala.commons.utils.XmlUtils._
+import se.fishtank.css.selectors.Selectors._
+import cn.orz.pascal.scala.mechanize._
+import scala.xml.NodeSeq
+import scala.xml.Node
 
 // vim: set ts=2 sw=2 et:
-class EBookJapanAgent extends Agent with LoggingSupport {
+class EBookJapanAgent extends SimpleAgent {
   val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
 
-  override def search(keyword: String): List[Item] = {
-    parse(read(keyword))
-  }
-
   override def getNewItems(): List[Item] = {
-    import cn.orz.pascal.scala.mechanize._
+
     val agent = new Mechanize()
 
     def get(pageNum: Int) = {
@@ -28,44 +28,40 @@ class EBookJapanAgent extends Agent with LoggingSupport {
     (1 to 5).map(get(_)).toList.flatten
   }
 
-  def read(keyword: String): scala.xml.NodeSeq = {
-    import cn.orz.pascal.scala.mechanize._
-
-    def encode(keyword: String) = java.net.URLEncoder.encode(keyword, "SJIS")
-    def readPages(agent: Mechanize, url: String, pageCount: Int) = {
-      val blank = <blank/> \ "any"
-
-      (1 to pageCount).map { i =>
-        val page = agent.get(url + "&page=" + i)
-        page.get(Id("main_line")) \\ "li"
-      }.foldLeft(blank)((r, node) => r ++ node)
-    }
-
+  override protected def read(keyword: String, pageNumber: Int): Option[NodeSeq] = {
     val agent = new Mechanize()
-    val queryUrl = "http://www.ebookjapan.jp/ebj/search.asp?s=6&sd=0&ebj_desc=on&q=" + encode(keyword)
+    val queryUrl = "http://www.ebookjapan.jp/ebj/search.asp?s=6&sd=0&ebj_desc=on&q=" + sjis(keyword) + "&page=" + pageNumber;
+    debug("url:%s, keyword:%s, encode:%s".format(queryUrl, keyword, sjis(keyword)).replaceAll("\n", ""))
+
     val page = agent.get(queryUrl)
-    val navi = page.get(Class("pagenavi"))
-    val pageCount = if (navi != null) {
-      "(全)(.*?)(ページ)".r.findFirstMatchIn(navi.text).get.group(2).toInt
+
+    val nodes = page.get(Id("main_line")) \\ "li"
+    if (!nodes.isEmpty) {
+      val pager = page.get(Class("pager_warp"))
+      this._hasNext = if (pager != null) {
+        val next = (pager $ "a > img" last).attribute("src") match { case Some(x) => x.text; case _ => "" }
+        (next == "/commonnew/image/common/next.gif")
+      } else {
+        false
+      }
+
+      Some(nodes)
     } else {
-      -1
+      None
     }
-
-    debug("url:%s, keyword:%s, encode:%s, count:%d".format(page.url, keyword, encode(keyword), pageCount).replaceAll("\n", ""))
-
-    readPages(agent, queryUrl, pageCount)
   }
 
-  def parse(item_nodes: scala.xml.NodeSeq): List[Item] = {
-    item_nodes.map(item =>
-      Item(
-        (item \ "h5" \ "a").text.trim,
-        "http://www.ebookjapan.jp" + (item \ "h5" \ "a" \ "@href").text,
-        (item \ "h6")(0).child(0).text.trim.replaceAll("円.*", "").toInt,
-        ((item \ "div")(1) \ "a").text.trim,
-        "http://www.ebookjapan.jp" + ((item \ "div")(1) \ "a" \ "@href").text,
-        (item \\ "img" \ "@src").text,
-        provider)).toList
+  override protected def parse(nodes: NodeSeq): List[Item] = {
+    nodes.map { node =>
+      val title = (node \ "h5" \ "a").text.trim
+      val url = "http://www.ebookjapan.jp" + (node \ "h5" \ "a" \ "@href").text
+      val value = (node \ "h6")(0).child(0).text.trim.replaceAll("円.*", "").toInt
+      val author = ((node \ "div")(1) \ "a").text.trim
+      val author_url = "http://www.ebookjapan.jp" + ((node \ "div")(1) \ "a" \ "@href").text
+      val image_url = (node \\ "img" \ "@src").text
+
+      Item(title, url, value, author, author_url, image_url, provider)
+    }.toList
   }
 
 }

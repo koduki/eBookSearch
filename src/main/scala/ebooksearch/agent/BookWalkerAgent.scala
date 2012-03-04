@@ -1,13 +1,14 @@
 package cn.orz.pascal.scala.ebooksearch.agent
 import cn.orz.pascal.scala.ebooksearch.models._
-import cn.orz.pascal.scala.commons.utils.LoggingSupport
+import cn.orz.pascal.scala.commons.utils.XmlUtils._
 import se.fishtank.css.selectors.Selectors._
 import cn.orz.pascal.scala.mechanize._
 import scala.xml.NodeSeq
-import cn.orz.pascal.scala.commons.utils.XmlUtils._
+import scala.xml.Node
 // vim: set ts=2 sw=2 et:
 class BookWalkerAgent extends SimpleAgent {
   override val provider = Provider("BOOK☆WALKER", "http://bookwalker.jp/")
+  
   override def getNewItems(): List[Item] = {
     val agent = new Mechanize()
     val page = agent.get("http://bookwalker.jp/pc/new/")
@@ -33,41 +34,39 @@ class BookWalkerAgent extends SimpleAgent {
     }
   }
 
-  override def getItemNodes(page: HtmlPage): NodeSeq = {
-    Thread.sleep(1000)
-    page.get(Id("section-search")) $ "[class=itemWrap]"
-  }
-
-  override def read(keyword: String): Option[NodeSeq] = {
+  override protected def read(keyword: String, pageNumber: Int): Option[NodeSeq] = {
     val agent = new Mechanize()
-    val queryUrl = "http://bookwalker.jp/pc/search/?detail=1&order=rank&disp=30&word=" + utf8(keyword) + "&inc=1";
+    agent.isJavaScriptEnabled_=(true)
+    val queryUrl = "http://bookwalker.jp/pc/search/?detail=1&order=rank&disp=30&word=" + utf8(keyword) + "&inc=1&page=" + pageNumber;
     debug("url:%s, keyword:%s, encode:%s".format(queryUrl, keyword, utf8(keyword)).replaceAll("\n", ""))
 
     val page = agent.get(queryUrl)
 
     val pager = page.get(Class("pageSelect"))
     if (pager != null) {
-      val pageNumbers = (pager $ "li > a[class=page-numbers]").map { node => node.text.trim.toInt }
-      val pageCount = if (pageNumbers.isEmpty) { 1 } else { pageNumbers.max }
+      Thread.sleep(800)
+      this._hasNext = (!((pager $ "li").isEmpty) && !((pager $ "li").last \ "a").isEmpty)
+      val nodes = page.get(Id("section-search")) $ "[class=itemWrap]"
+      debug("found :" + keyword + ", size:" + nodes.size)
 
-      Some(readPages(agent, queryUrl, pageCount, "&page="))
+      Some(nodes)
     } else {
+      debug("not found :" + keyword)
       None
     }
   }
 
-  override def parse(itemNodes: NodeSeq): List[Item] = {
-    itemNodes.map { node =>
+  override protected def parse(nodes: NodeSeq): List[Item] = {
+    nodes.map { node =>
       val title = (node $ "[class=detail] > [class=title] > a").text.trim
       val url = (node $ "[class=detail] > [class=title] > a") attr "href"
       val value = (node $ "[class=price] > strong").text.trim.toInt
       val author = (node $ "[class=detail] > [class=writer]").text.trim
       val author_url = ""
       val image_url = (node $ "[class=image] > a > img") attr "src"
-      
+
       Item(title, url, value, author, author_url, image_url, provider)
     }.toList
-
   }
 
 }

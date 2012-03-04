@@ -8,7 +8,6 @@ class NewItemCrawler {
   def crawl() {
     val agents = List(
       new EBookJapanAgent,
-//      new NicoSeigaAgent,
       new BookWalkerAgent,
       new PaburiAgent)
 

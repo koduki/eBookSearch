@@ -27,14 +27,13 @@ class WebFront extends EBookSearchServlet {
 
   get("/search") {
     val query = params('q)
-    val items = List(
+    val results = List(
       new EBookJapanAgent,
-      new NicoSeigaAgent,
       new BookWalkerAgent,
       new PaburiAgent)
-      .map(x => future{ x.search(query) })
+      .map(x => future{ x.search(query, 1) })
       .map(_())
-      .fold(List[Item]()) { (r, item) => r ++ item }
+    val items = results.map{ x => x._1}.fold(List[Item]()) { (r, item) => r ++ item }
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 
