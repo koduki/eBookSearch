@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<servlet>
-		<servlet-name>default</servlet-name>
+		<servlet-name>scalatra</servlet-name>
 		<servlet-class>cn.orz.pascal.scala.ebooksearch.web.WebFront</servlet-class>
 	</servlet>
 
@@ -12,9 +12,15 @@
 		<servlet-class>cn.orz.pascal.scala.ebooksearch.batch.TaskScheduler</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-
+<!-- 	<servlet-mapping>
+		<servlet-name>scalatra</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping
+ -->
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/images/*</url-pattern>
+		<url-pattern>/css/*</url-pattern>
+		<url-pattern>/js/*</url-pattern>
 	</servlet-mapping>
 </web-app>
