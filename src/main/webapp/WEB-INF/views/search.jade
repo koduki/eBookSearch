@@ -10,13 +10,36 @@ form#search{:action => "/search", :method => "get"}
   input#ebj{:type => "hidden", :name => "ebj", :value => nextEbj}
   input#pbr{:type => "hidden", :name => "pbr", :value => nextPbr}
   input{:type =>"submit", :value => "search"}
-p counts:#{items.size}
--if(nextBkw == 1 || nextEbj == 1 || nextPbr == 1)
-  a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
-    span next
+section#result
+  header 
+    |検索結果 #{pageNumber}ページ目(#{items.size} 件)
+    -if(pageNumber > 1)
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber - 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+        span#prev Prev
+      span |
+    -if(nextBkw == 1 || nextEbj == 1 || nextPbr == 1)
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+        span#next Next
 
-ul#resultt
-  - for(item <- items)
-    li
-      a(href="#{item.url}")
-        | #{item.title} - #{item.author} - #{item.provider.name}
+  ul
+    - for(item <- items)
+      li
+        a(href="#{item.url}")
+          img(src="#{item.image_url}")
+        article
+          h3
+            a(href="#{item.url}") #{item.title} 
+          p #{item.value} 円
+          p #{item.author}
+          p 
+            a(href="#{item.provider.url}") #{item.provider.name}
+
+  footer 
+    |検索結果 #{pageNumber}ページ目(#{items.size} 件)
+    -if(pageNumber > 1)
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber - 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+        span#prev Prev
+      span |
+    -if(nextBkw == 1 || nextEbj == 1 || nextPbr == 1)
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+        span#next Next

@@ -1,3 +1,71 @@
-@base: #f938ab;
+@text-color: #666;
+@boder-color:#E7E4E4;
 
-body {background-color:@base} 
+body {
+  color:@text-color;
+} 
+
+h1 {
+  background-image: url("/images/header.png");
+  background-position: left top;
+  background-repeat: no-repeat;
+  height:150px;
+  width:320px;
+  text-indent: -999em;
+}
+
+#main {
+  input[type="text"] {
+    border: 1px solid @text-color;
+    width:700px; 
+  } 
+}
+
+#result {
+  width: 750px;
+  header {
+    margin-top:20px;
+    color: #666;
+    span {
+      margin-left:10px;
+    }
+  }
+
+  footer {
+    clear:left;
+    padding-top:20px;
+    color: #666;
+    span {
+      margin-left:10px;
+    }
+  }
+
+  ul {
+    li {
+      list-style: none;
+      float: left;
+      margin: 5px;
+      padding: 0px;
+      width: 150px;
+      height:310px;
+      font-size: 12px;
+
+      display: inline-block;
+      border: 1px solid @boder-color;
+      vertical-align: top;
+      text-align: center;
+
+      img {
+        width:123px;
+        height:172px;
+      }
+
+      h3 {  }
+
+      p { 
+        display: block; 
+        margin: 5px;
+      }
+    }
+  }
+}
