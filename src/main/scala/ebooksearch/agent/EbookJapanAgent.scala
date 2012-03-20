@@ -8,7 +8,7 @@ import scala.xml.Node
 
 // vim: set ts=2 sw=2 et:
 class EBookJapanAgent extends SimpleAgent {
-  val provider = Provider("eBookJapan", "http://www.ebookjapan.jp/")
+  override val provider = Providers.eBookJapan
 
   override def getNewItems(): List[Item] = {
 

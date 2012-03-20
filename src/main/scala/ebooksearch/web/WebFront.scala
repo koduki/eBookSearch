@@ -3,7 +3,7 @@ package cn.orz.pascal.scala.ebooksearch.web
 import org.scalatra._
 import java.net.URL
 import scalate.ScalateSupport
-import com.mongodb.casbah.commons._
+
 import cn.orz.pascal.scala.ebooksearch.models._
 import cn.orz.pascal.scala.commons.utils.LoggingSupport
 import cn.orz.pascal.scala.commons.utils.DateUtils._
@@ -11,33 +11,29 @@ import cn.orz.pascal.scala.ebooksearch.agent._
 import ch.qos.logback._
 import org.slf4j._
 import scala.actors.Futures._
+import com.mongodb.casbah.Imports._
+import com.novus.salat.global._
+import com.novus.salat._
+import com.novus.salat.annotations._
+import com.novus.salat.global._
 
-class WebFront extends EBookSearchServlet {
-  def validateParam(name: String, default: Boolean) = {
-    if (params.contains(name) && (params(name).matches("[01]"))) {
-      params(name) == "1"
-    } else {
-      default
-    }
-  }
-
-  def validateParam(name: String, default: Int) = {
-    if (params.contains(name) && params(name).matches("""\d""")) {
-      params(name).toInt
-    } else {
-      default
-    }
-  }
-
-  beforeAll {
-    contentType = "text/html"
-  }
-
+class WebFront extends BasicServlet {
   get("/") {
-    val feeds = FeedItemDao
-      .find(MongoDBObject("createdAt" -> MongoDBObject("$gte" -> today)))
-      .sort(orderBy = MongoDBObject("createdAt" -> -1))
-      .toList
+    def getFeeds(provider: Provider) = {
+      FeedItemDao
+        .find((MongoDBObject("_id.provider" -> grater[Provider].asDBObject(provider))))
+        .sort(orderBy = MongoDBObject("createdAt" -> -1))
+        .limit(8)
+        .toList
+        .foldLeft(Map[(Provider, java.util.Date), List[Item]]()) { (r, x) =>
+          val createdAt = dateTrim(x.createdAt)
+          val list = if (r.contains((provider, createdAt))) { r(provider, createdAt) } else { List[Item]() }
+          r + ((provider, createdAt) -> (list ++ List(x.item)))
+        }
+    }
+    
+    val feeds = getFeeds(Providers.bookWalker) ++ getFeeds(Providers.paburi) ++ getFeeds(Providers.eBookJapan)
+    
     jade("index", "feeds" -> feeds)
   }
 

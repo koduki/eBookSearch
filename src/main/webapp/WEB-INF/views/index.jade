@@ -1,14 +1,24 @@
--@ val feeds: List[cn.orz.pascal.scala.ebooksearch.models.FeedItem]
+-@ val feeds: Map[(cn.orz.pascal.scala.ebooksearch.models.Provider, java.util.Date), List[cn.orz.pascal.scala.ebooksearch.models.Item]]
 p
-  | eNdex へ　ようこそ.
+  | e-Ndex へ ようこそ.
   br/
-  | このサイトでは電子書籍の横断検索ができます.
+  | このサイトでは電子書籍の横断検索です.
 form#search{:action => "/search", :method => "get"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}
-p 新着
-ul#resultt
+
+section#feeds
+  header
+    h2 新着一覧
   - for(feed <- feeds)
-    li 
-      a(href="#{feed.item.url}")
-        | #{feed.createdAt} #{feed.item.title} - #{feed.item.author} - #{feed.item.provider.name}
+    section.feed
+      h2 
+        a(href="#{feed._1._1.url}") #{feed._1._2} - #{feed._1._1.name}
+      ul
+        - for(item <- feed._2)
+          li
+            a(href="#{item.url}")
+              img(src="#{item.image_url}")
+            article
+              h3
+                a(href="#{item.url}") #{item.title} 
