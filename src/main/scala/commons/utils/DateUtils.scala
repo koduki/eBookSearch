@@ -6,16 +6,22 @@ import java.util.Date
 import java.util.Calendar
 
 object DateUtils {
-  def date(year: Int, month: Int, date: Int): Date = {
-    val format = new SimpleDateFormat("yyyyMMdd")
+  def date(year: Int, month: Int, date: Int, hour:Int=0, minute:Int=0, second:Int=0): Date = {
+    val format = new SimpleDateFormat("yyyyMMddHHmmss")
     format.setLenient(false)
-    format.parse("%d%2d%2d" format (year, month, date))
+    format.parse("%d%2d%2d%2d%2d%2d" format (year, month, date, hour, minute, second))
   }
   
   def today() = {
     import java.util.Calendar._
+    dateTrim(Calendar.getInstance().getTime())
+  }
+  
+  def dateTrim(target:Date) = {
+    import java.util.Calendar._
     val calendar = Calendar.getInstance()
     calendar.setLenient(false)
+    calendar.setTime(target)
     
     calendar.set(HOUR_OF_DAY, 0)
     calendar.set(MINUTE, 0)

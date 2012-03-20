@@ -15,7 +15,12 @@ class DateUtilsTest extends WordSpec with ShouldMatchers {
     "date '2012,2,25'" in {
       date(2012, 2, 25) should be(new SimpleDateFormat("yyyyMMdd") parse ("20120225"))
     }
-
+    "date '2012,2,25 1:20'" in {
+      date(2012, 2, 25, 1, 20) should be(new SimpleDateFormat("yyyyMMddHHmm") parse ("201202250120"))
+    }
+    "date '2012,3,25 21:20:30'" in {
+      date(2012, 3, 25, 21, 20, 30) should be(new SimpleDateFormat("yyyyMMddHHmmss") parse ("20120325212030"))
+    }
     "throw ParseException if date is '2012,2,31'" in {
       intercept[ParseException] {
         date(2012, 2, 31)
@@ -66,5 +71,19 @@ class DateUtilsTest extends WordSpec with ShouldMatchers {
       today.second should be(0)
     }
   }
+
+  "dateTrim" when {
+    "2012-11-03 04:05:11" should {
+      "trim hour, minute, second" in {
+        dateTrim(date(2012, 11, 3, 4, 5, 11)) should be(date(2012, 11, 03))
+      }
+    }
+    "2012-4-01 14:05:11" should {
+      "trim hour, minute, second" in {
+        dateTrim(date(2012, 4, 1, 14, 5, 11)) should be(date(2012, 4, 1))
+      }
+    }
+  }
+
 }
 
