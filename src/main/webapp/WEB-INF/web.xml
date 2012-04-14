@@ -2,9 +2,12 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-
 	<servlet>
-		<servlet-name>scalatra</servlet-name>
+		<servlet-name>resource</servlet-name>
+		<servlet-class>cn.orz.pascal.scala.ebooksearch.web.ResourceServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>scalate</servlet-name>
 		<servlet-class>cn.orz.pascal.scala.ebooksearch.web.WebFront</servlet-class>
 	</servlet>
 	<servlet>
@@ -14,14 +17,14 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>default</servlet-name>
+		<servlet-name>resource</servlet-name>
 		<url-pattern>/images/*</url-pattern>
 		<url-pattern>/css/*</url-pattern>
 		<url-pattern>/js/*</url-pattern>
 	</servlet-mapping>
-  <servlet-mapping>
-	  <servlet-name>scalatra</servlet-name>
+	<servlet-mapping>
+		<servlet-name>scalate</servlet-name>
 		<url-pattern>/*</url-pattern>
-  </servlet-mapping>
+	</servlet-mapping>
 
 </web-app>

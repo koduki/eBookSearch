@@ -65,6 +65,11 @@ class WebFront extends BasicServlet {
       "nextEbj" -> (if (hasNextEBJ) { 1 } else { 0 }),
       "nextPbr" -> (if (hasNextPBR) { 1 } else { 0 }))
   }
+  
+  get("/api/books") {
+      contentType = "text/javascript"
+    "{a:'b'}"
+  }
 
   notFound {
     findTemplate(requestPath) map { path =>
