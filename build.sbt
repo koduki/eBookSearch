@@ -29,6 +29,8 @@ libraryDependencies += "com.novus" %% "salat-core" % "0.0.8-SNAPSHOT"
 
 libraryDependencies += "org.quartz-scheduler" % "quartz" % "2.0.2"
 
+libraryDependencies += "commons-codec" % "commons-codec" % "1.3"
+
 resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
 resolvers += "Sonatype OSS Public" at "http://oss.sonatype.org/content/groups/public/"
