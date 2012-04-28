@@ -29,7 +29,7 @@ class SignedRequestsHelper {
   private val REQUEST_URI: String = "/onca/xml"
   private val REQUEST_METHOD: String = "GET"
 
-  private val endpoint: String = "ecs.amazonaws.jp" // must be lowercase
+  private val endpoint: String = "ecs.amazonaws.jp"
 
   private var secretKeySpec: SecretKeySpec = null
 
@@ -71,14 +71,14 @@ class SignedRequestsHelper {
     var dfm: DateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
     dfm.setTimeZone(TimeZone.getTimeZone("GMT"))
     timestamp = dfm.format(date)
+
     return timestamp
-    // "2012-04-15T03:02:24Z"
   }
 
   private def canonicalize(sortedParamMap: SortedMap[String, String]): String = {
     if (sortedParamMap.isEmpty()) return ""
 
-    var buffer = new StringBuffer()
+    var buffer = new StringBuilder()
     var iter: Iterator[JavaMap.Entry[String, String]] = sortedParamMap.entrySet().iterator()
 
     while (iter.hasNext()) {
