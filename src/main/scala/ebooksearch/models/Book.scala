@@ -8,6 +8,6 @@ import com.novus.salat.dao._
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoConnection
 
-case class FeedItem(@Key("_id") item: Item, createdAt: java.util.Date)
-object FeedItemDao extends SalatDAO[FeedItem, Int](collection = MongoConnection()("test")("feed_items"))
+case class Book(asin:String,title:String,author:String, publisher:String, items:Set[Item])
+object BookDao extends SalatDAO[Book, Int](collection = MongoConnection()("test")("feed_items"))
 
