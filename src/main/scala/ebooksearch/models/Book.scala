@@ -8,6 +8,6 @@ import com.novus.salat.dao._
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoConnection
 
-case class Book(asin:String,title:String,author:String, publisher:String,image_url:String, items:Set[Item])
-object BookDao extends SalatDAO[Book, Int](collection = MongoConnection()("test")("books"))
+case class Book(@Key("_id") id: ObjectId = new ObjectId, asin:String,title:String,author:String, publisher:String,image_url:String, items:Set[Item])
+object BookDao extends SalatDAO[Book, ObjectId](collection = MongoConnection()("test")("books"))
 

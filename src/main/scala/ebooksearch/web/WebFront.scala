@@ -65,6 +65,12 @@ class WebFront extends BasicServlet {
       "nextEbj" -> (if (hasNextEBJ) { 1 } else { 0 }),
       "nextPbr" -> (if (hasNextPBR) { 1 } else { 0 }))
   }
+
+  get("/books/:oid") {
+  val oid = new ObjectId(params("oid"))
+    val book = BookDao.findOneByID(oid) match {case Some(x) => x; case _ => null}
+      jade("book", "book" -> book)
+  }
   
   get("/api/books") {
       contentType = "text/javascript"

@@ -1,0 +1,24 @@
+-@ val book: cn.orz.pascal.scala.ebooksearch.models.Book
+p
+  | e-Ndex へ ようこそ.
+  br/
+  | このサイトでは電子書籍の横断検索です.
+form#search{:action => "/search", :method => "get"}
+  input#q{:type => "text", :name => "q"} 
+  input{:type =>"submit", :value => "search"}
+
+section#bookDetail
+  header
+    h2 #{book.title}
+  article
+    ul
+      li #{book.title} 
+      li #{book.author} 
+      li 画像
+
+    h3 取り扱いストア
+    ul
+      - for(item <- book.items)
+        li
+          a(href="#{item.url}")
+            p #{item.provider.name}
