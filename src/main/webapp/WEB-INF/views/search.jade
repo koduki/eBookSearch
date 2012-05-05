@@ -12,7 +12,7 @@ form#search{:action => "/search", :method => "get"}
   input{:type =>"submit", :value => "search"}
 section#result
   header 
-    |検索結果2 #{pageNumber}ページ目(#{books.size} 件)
+    |検索結果 #{pageNumber}ページ目(#{books.size} 件)
     -if(pageNumber > 1)
       a(href='#{"/search?q=" + query + "&page="+(pageNumber - 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
         span#prev Prev
@@ -25,7 +25,7 @@ section#result
     - for(book <- books)
       li
         a(href="/books/#{book.id}")
-          img(src="#{book.image_url}")
+          img(src="#{book.image.medium}")
         article
           h3
             a(href="/books/#{book.id}") #{book.title} 

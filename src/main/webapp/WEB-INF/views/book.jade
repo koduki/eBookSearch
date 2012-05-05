@@ -14,11 +14,12 @@ section#bookDetail
     ul
       li #{book.title} 
       li #{book.author} 
-      li 画像
+      li
+        img(src="#{book.image.large}")
 
     h3 取り扱いストア
     ul
       - for(item <- book.items)
         li
           a(href="#{item.url}")
-            p #{item.provider.name}
+            p #{item.provider.name} - #{item.title}

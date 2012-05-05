@@ -29,20 +29,22 @@ def search(aws:AmazonWebService, item:Item):Book = {
   val keyword = (item.title + item.author).replaceAll("【立ち読み版】", " ").replaceAll("著者：", " ").replaceAll("イラスト：", " ")
   println(keyword)
   val results = aws.searchItem(keyword)
-  if (results.isEmpty) {
+  val book=if (results.isEmpty) {
     println("Blank!")
-    return Book(title = item.title, author= item.author, publisher="", image_url=item.image_url, asin="", items=Set(item))
-  }
-  println(results)
-  val result =  results.map(x => (x -> LevenshteinDistance(trim(item.title), trim(x.title)))).sort((x, y) => x._2 < y._2).first._1
-  // save or update.
-  val books = BookDao.find(MongoDBObject("asin" -> result.aisn )) toList
-  val book=if(books.isEmpty){
-    Book(title = result.title, author= result.author, publisher=result.manufacturer, image_url=result.detailUrl, asin=result.aisn, items=Set(item))
-  }else{
-    books.first.addItem(item)
+    Book(title = item.title, author= item.author, publisher="", image=Image(item.image_url, item.image_url, item.image_url), asin="", items=Set(item))
+  } else {
+    println(results)
+    val result =  results.map(x => (x -> LevenshteinDistance(trim(item.title), trim(x.title)))).sort((x, y) => x._2 < y._2).first._1
+    val books = BookDao.find(MongoDBObject("asin" -> result.asin )) toList
+    val b =if (books.isEmpty){
+        Book(title = result.title, author= result.author, publisher=result.manufacturer, image=Image(result.image.small, result.image.medium, result.image.large), asin=result.asin, items=Set(item))
+    }else{
+        books.first.addItem(item)
+    }
+    b
   }
   BookDao.save(book)
+  println(book)
   book
 }
 
@@ -84,7 +86,7 @@ def trim(str:String) = {
       .map(x => future { x.search(query, pageNumber) })
       .map(_())
     
-    val aws = new AmazonWebService(config.amazonPAA.accessKeyId, config.amazonPAA.secretKey, config.amazonPAA.associateTag)
+    val aws = new AmazonWebService(config.amazon.accessKeyId, config.amazon.secretKey, config.amazon.associateTag)
     val items = results.map { x => x._1 }.fold(List[Item]()) { (r, item) => r ++ item }
     val books = items.map{ item => search(aws, item) }
 

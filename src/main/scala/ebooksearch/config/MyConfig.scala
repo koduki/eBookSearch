@@ -2,6 +2,6 @@
 package cn.orz.pascal.scala.ebooksearch.config
 
 trait MyConfig {
-  case class AmazonPAAConfig(accessKeyId:String, secretKey:String, associateTag:String)
-  val amazonPAA:AmazonPAAConfig
+  case class AmazonWebServiceConfig(accessKeyId:String, secretKey:String, associateTag:String)
+  val amazon:AmazonWebServiceConfig
 }

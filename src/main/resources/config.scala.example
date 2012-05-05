@@ -2,7 +2,7 @@
 import cn.orz.pascal.scala.ebooksearch.config.MyConfig
 
 new MyConfig {
-  val amazonPAA = AmazonPAAConfig (
+  val amazon = AmazonWebServiceConfig (
     accessKeyId  = "AAAAAAAAAAAAAAAAA",
     secretKey    = "AAAAAAAAAA+AAAAAAAAAA+AAAAAAAA",
     associateTag = "test"

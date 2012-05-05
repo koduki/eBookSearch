@@ -8,9 +8,10 @@ import com.novus.salat.dao._
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoConnection
 
-case class Book(@Key("_id") id: ObjectId = new ObjectId, asin:String,title:String,author:String, publisher:String,image_url:String, items:Set[Item]) {
+case class Image(val small:String, val medium:String, val large:String)
+case class Book(@Key("_id") id: ObjectId = new ObjectId, asin:String,title:String,author:String, publisher:String,image:Image, items:Set[Item]) {
   def addItem(item:Item) = {
-  Book(this.id, this.asin, this.title, this.author, this.publisher, this.image_url, this.items + item)
+  Book(this.id, this.asin, this.title, this.author, this.publisher, this.image, this.items + item)
   }
 }
 
