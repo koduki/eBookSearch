@@ -33,8 +33,8 @@ class PaburiAgent extends SimpleAgent {
 
     nodes.map { parseNode(_) }
   }
-  
-  override protected def read(keyword: String, pageNumber:Int): Option[NodeSeq] = {
+
+  override protected def read(keyword: String, pageNumber: Int): Option[NodeSeq] = {
     val agent = new Mechanize()
     agent.isJavaScriptEnabled_=(false)
     val queryUrl = "http://www.paburi.com/paburi/bin/qfind2.asp?pack=100&sort=0&keyword=" + sjis(keyword) + "&environment=&page=" + pageNumber;

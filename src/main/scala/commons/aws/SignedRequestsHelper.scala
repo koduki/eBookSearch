@@ -115,7 +115,7 @@ class SignedRequestsHelper {
     }
     sortedParamMap.put("AWSAccessKeyId", awsAccessKeyId)
     sortedParamMap.put("Timestamp", format(timestamp))
-    
+
     sortedParamMap
   }
 

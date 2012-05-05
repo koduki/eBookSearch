@@ -5,9 +5,9 @@ import scala.xml.XML
 
 class AmazonWebService(awsAccessKeyId: String, awsSecretKey: String, associateTag: String) {
   val signedRequestsHelper = new SignedRequestsHelper()
-  case class Image(val small:String, val medium:String, val large:String)
-  case class Item(val title: String, val author: String, val manufacturer: String, val detailUrl:String, val image: Image, val asin: String)
-  def searchItem(keyword: String):List[Item] = {
+  case class Image(val small: String, val medium: String, val large: String)
+  case class Item(val title: String, val author: String, val manufacturer: String, val detailUrl: String, val image: Image, val asin: String)
+  def searchItem(keyword: String): List[Item] = {
     val params = Map(
       "Version" -> "2009-07-01",
       "Operation" -> "ItemSearch",
@@ -19,7 +19,7 @@ class AmazonWebService(awsAccessKeyId: String, awsSecretKey: String, associateTa
 
     val queryUrl = signedRequestsHelper.sign(awsAccessKeyId, awsSecretKey)(params)
     val xml = readXml(queryUrl)
-    (xml \\ "Item").map{node => parse(node)}.toList
+    (xml \\ "Item").map { node => parse(node) }.toList
 
   }
 

@@ -9,9 +9,9 @@ import scala.xml.NodeSeq
 trait SimpleAgent extends Agent with LoggingSupport {
   val provider: Provider
   var _hasNext = false
-  def hasNext:Boolean = this._hasNext
+  def hasNext: Boolean = this._hasNext
 
-  override def search(keyword: String, pageNumber:Int = 1): (List[Item], Boolean) = {
+  override def search(keyword: String, pageNumber: Int = 1): (List[Item], Boolean) = {
     read(keyword, pageNumber) match {
       case Some(nodes) => (parse(nodes), this.hasNext)
       case None => (List(), false)
@@ -20,7 +20,7 @@ trait SimpleAgent extends Agent with LoggingSupport {
 
   protected def utf8(keyword: String) = java.net.URLEncoder.encode(keyword, "UTF-8")
   protected def sjis(keyword: String) = java.net.URLEncoder.encode(keyword, "Shift_JIS")
-  protected def read(keyword: String, pageNumber:Int): Option[NodeSeq]
+  protected def read(keyword: String, pageNumber: Int): Option[NodeSeq]
   protected def parse(nodes: NodeSeq): List[Item]
 
 }
