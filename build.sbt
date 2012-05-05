@@ -31,6 +31,10 @@ libraryDependencies += "org.quartz-scheduler" % "quartz" % "2.0.2"
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.3"
 
+libraryDependencies += "com.twitter" % "util-eval" % "1.12.13" withSources()
+
+libraryDependencies += "com.ibm.icu" % "icu4j" % "49.1"
+
 resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
 resolvers += "Sonatype OSS Public" at "http://oss.sonatype.org/content/groups/public/"
@@ -38,4 +42,6 @@ resolvers += "Sonatype OSS Public" at "http://oss.sonatype.org/content/groups/pu
 resolvers += "repo.novus rels" at "http://repo.novus.com/releases/"
 
 resolvers += "repo.novus snaps" at "http://repo.novus.com/snapshots/"
+
+resolvers += "T repo" at "http://maven.twttr.com/"
 
