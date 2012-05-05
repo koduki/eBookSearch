@@ -1,0 +1,10 @@
+// vim: set ts=4 sw=4 et:
+import cn.orz.pascal.scala.ebooksearch.config.MyConfig
+
+new MyConfig {
+  val amazonPAA = AmazonPAAConfig (
+    accessKeyId  = "AAAAAAAAAAAAAAAAA",
+    secretKey    = "AAAAAAAAAA+AAAAAAAAAA+AAAAAAAA",
+    associateTag = "test"
+  )
+}
