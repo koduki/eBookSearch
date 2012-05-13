@@ -14,28 +14,28 @@ import com.novus.salat._
 import com.novus.salat.annotations._
 import com.novus.salat.global._
 
-class BookSelecter(val config:MyConfig) extends LoggingSupport {
-  def change(source:Book, item: Item, isbn:String): Book = {
+class BookSelecter(val config: MyConfig) extends LoggingSupport {
+  def change(source: Book, item: Item, isbn: String): Book = {
     BookDao.save(source.removeItem(item))
 
-    val another =  BookDao.find(MongoDBObject("isbn" -> isbn )).toList 
+    val another = BookDao.find(MongoDBObject("isbn" -> isbn)).toList
     val book = if (another.isEmpty) {
       val rbs = new RakutenBooks(config.rakuten.developerId)
-      val results = rbs.search(isbn) 
-      if(results.isEmpty) {
-        throw new Exception("not found book") 
+      val results = rbs.search(isbn)
+      if (results.isEmpty) {
+        throw new Exception("not found book")
       }
       val result = results.first
       Book(
-          title = result.title, 
-          author = result.author, 
-          seriesName = result.seriesName, 
-          publisherName = result.publisherName, 
-          genre = result.size, 
-          salesDate = result.salesDate, 
-          image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original), 
-          isbn = result.isbn, 
-          items = Set(item))
+        title = result.title,
+        author = result.author,
+        seriesName = result.seriesName,
+        publisherName = result.publisherName,
+        genre = result.size,
+        salesDate = result.salesDate,
+        image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original),
+        isbn = result.isbn,
+        items = Set(item))
     } else {
       another.first
     }
@@ -51,7 +51,7 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
       val book = selectFromRakuten(item)
       BookDao.save(book)
       book
-      
+
     } else {
       debug("%s is return db item.".format(item.title))
       books.first
@@ -62,7 +62,16 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
   private def selectFromRakuten(item: Item): Book = {
     val rbs = new RakutenBooks(config.rakuten.developerId)
     val title = item.title.replaceAll("【立ち読み版】", " ").replaceAll("【立ち読み版】", "")
-    val author = item.author.replaceAll("著者：", "").replaceAll("イラスト：.*", "").replaceAll("漫画：", "").replaceAll("原作：", "").replaceAll("作画：.*", "")
+    val author = item.author
+      .replaceAll("\r\n", "")
+      .replaceAll("\n", "")
+      .replaceAll("著者：", "")
+      .replaceAll("イラスト：.*", "")
+      .replaceAll("漫画：", "")
+      .replaceAll("原作：", "")
+      .replaceAll("作画：.*", "")
+      .replaceAll("　", " ")
+      .split(" ").first
 
     debug("title=%s,\tauthor=%s".format(title, author))
     val results = rbs.search(title, author)
@@ -70,32 +79,32 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
     if (results.isEmpty) {
       info("%s is not found.".format(title))
       Book(
-          title = item.title, 
-          author = item.author, 
-          seriesName = "", 
-          publisherName = "", 
-          genre = "", 
-          salesDate = "", 
-          image = Image(item.image_url, item.image_url, item.image_url, item.image_url, item.image_url), 
-          isbn = "", 
-          items = Set(item))
- 
+        title = item.title,
+        author = item.author,
+        seriesName = "",
+        publisherName = "",
+        genre = "",
+        salesDate = "",
+        image = Image(item.image_url, item.image_url, item.image_url, item.image_url, item.image_url),
+        isbn = "",
+        items = Set(item))
+
     } else {
       val result = selectBestFitBook(item, results)
       val books = BookDao.find(MongoDBObject("isbn" -> result.isbn)).toList
       if (books.isEmpty) {
         debug("create new book [%s].".format(title))
         Book(
-          title = result.title, 
-          author = result.author, 
-          seriesName = result.seriesName, 
-          publisherName = result.publisherName, 
-          genre = result.size, 
-          salesDate = result.salesDate, 
-          image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original), 
-          isbn = result.isbn, 
+          title = result.title,
+          author = result.author,
+          seriesName = result.seriesName,
+          publisherName = result.publisherName,
+          genre = result.size,
+          salesDate = result.salesDate,
+          image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original),
+          isbn = result.isbn,
           items = Set(item))
- 
+
       } else {
         debug("update book [%s].".format(title))
         books.first.addItem(item)
