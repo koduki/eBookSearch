@@ -12,7 +12,7 @@ import ch.qos.logback._
 import org.slf4j._
 
 trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSupport {
-  def validateParam(name: String, default: Boolean) = {
+  def validateParam(name: String, default: Boolean):Boolean = {
     if (params.contains(name) && (params(name).matches("[01]"))) {
       params(name) == "1"
     } else {
@@ -20,7 +20,7 @@ trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSuppo
     }
   }
 
-  def validateParam(name: String, default: Int) = {
+  def validateParam(name: String, default: Int):Int = {
     if (params.contains(name) && params(name).matches("""\d""")) {
       params(name).toInt
     } else {

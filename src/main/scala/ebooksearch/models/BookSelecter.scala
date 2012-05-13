@@ -15,6 +15,25 @@ import com.novus.salat.annotations._
 import com.novus.salat.global._
 
 class BookSelecter(val config:MyConfig) extends LoggingSupport {
+  def change(source:Book, item: Item, isbn:String): Book = {
+    BookDao.save(source.removeItem(item))
+
+    val another =  BookDao.find(MongoDBObject("isbn" -> isbn )).toList 
+    val book = if (another.isEmpty) {
+      val rbs = new RakutenBooks(config.rakuten.developerId)
+      val results = rbs.search(isbn) 
+      if(results.isEmpty) {
+        throw new Exception("not found book") 
+      }
+      val result = results.first
+      Book(title = result.title, author = result.author, publisher = result.manufacturer, image = Image(result.image.small, result.image.medium, result.image.large), isbn = result.isbn, items = Set(item))
+    } else {
+      another.first
+    }
+    BookDao.save(book.addItem(item))
+    book
+  }
+
   def select(item: Item): Book = {
     val books = BookDao.find(MongoDBObject("items" -> grater[Item].asDBObject(item))) toList
     val result = if (books.isEmpty) {
@@ -32,7 +51,7 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
 
   private def selectFromRakuten(item: Item): Book = {
     val rbs = new RakutenBooks(config.rakuten.developerId)
-    val title = item.title.replaceAll("【立ち読み版】", " ")
+    val title = item.title.replaceAll("【立ち読み版】", " ").replaceAll("【立ち読み版】", "")
     val author = item.author.replaceAll("著者：", "").replaceAll("イラスト：.*", "").replaceAll("漫画：", "").replaceAll("原作：", "").replaceAll("作画：.*", "")
 
     debug("title=%s,\tauthor=%s".format(title, author))
@@ -40,13 +59,13 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
 
     if (results.isEmpty) {
       info("%s is not found.".format(title))
-      Book(title = item.title, author = item.author, publisher = "", image = Image(item.image_url, item.image_url, item.image_url), asin = "", items = Set(item))
+      Book(title = item.title, author = item.author, publisher = "", image = Image(item.image_url, item.image_url, item.image_url), isbn = "", items = Set(item))
     } else {
       val result = selectBestFitBook(item, results)
-      val books = BookDao.find(MongoDBObject("asin" -> result.isbn)).toList
+      val books = BookDao.find(MongoDBObject("isbn" -> result.isbn)).toList
       if (books.isEmpty) {
         debug("create new book [%s].".format(title))
-        Book(title = result.title, author = result.author, publisher = result.manufacturer, image = Image(result.image.small, result.image.medium, result.image.large), asin = result.isbn, items = Set(item))
+        Book(title = result.title, author = result.author, publisher = result.manufacturer, image = Image(result.image.small, result.image.medium, result.image.large), isbn = result.isbn, items = Set(item))
       } else {
         debug("update book [%s].".format(title))
         books.first.addItem(item)
@@ -56,7 +75,6 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
 
   private def selectBestFitBook(item: Item, results: List[RakutenItem]): RakutenItem = {
     val result = results.map(x => (x -> LevenshteinDistance(trim(item.title), trim(x.title)))).sort((x, y) => x._2 < y._2).first._1
-//    val result = results.first
     result
   }
 

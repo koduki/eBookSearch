@@ -14,6 +14,8 @@ section#bookDetail
     ul
       li #{book.title} 
       li #{book.author} 
+      li #{book.publisher} 
+      li #{book.isbn} 
       li
         img(src="#{book.image.large}")
 
@@ -23,3 +25,15 @@ section#bookDetail
         li
           a(href="#{item.url}")
             p #{item.provider.name} - #{item.title}
+          form
+          form{:action => "/books/change", :method => "post"}
+            input{:type => "text", :value => {item.title}, :name => "title"}
+            input{:type => "text", :value => {item.url}, :name => "url"}
+            input{:type => "text", :value => {item.value}, :name => "value"}
+            input{:type => "text", :value => {item.author}, :name => "author"}
+            input{:type => "text", :value => {item.author_url}, :name => "author_url"}
+            input{:type => "text", :value => {item.image_url}, :name => "image_url"}
+            input{:type => "text", :value => {item.provider.name}, :name => "provider_name"}
+            input{:type => "text", :value => "", :name => "isbn"}
+            input{:type => "text", :value => {book.id}, :name => "oid"}
+            input{:type =>"submit", :value => "コレじゃない"}

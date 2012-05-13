@@ -35,6 +35,8 @@ libraryDependencies += "com.twitter" % "util-eval" % "1.12.13" withSources()
 
 libraryDependencies += "com.ibm.icu" % "icu4j" % "49.1"
 
+libraryDependencies += "net.debasishg" %% "sjson" % "0.17"
+
 resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
 resolvers += "Sonatype OSS Public" at "http://oss.sonatype.org/content/groups/public/"
