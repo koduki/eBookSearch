@@ -25,17 +25,7 @@ class BookSelecter(val config: MyConfig) extends LoggingSupport {
       if (results.isEmpty) {
         throw new Exception("not found book")
       }
-      val result = results.first
-      Book(
-        title = result.title,
-        author = result.author,
-        seriesName = result.seriesName,
-        publisherName = result.publisherName,
-        genre = result.size,
-        salesDate = result.salesDate,
-        image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original),
-        isbn = result.isbn,
-        items = Set(item))
+      buildBook(item, results.first)
     } else {
       another.first
     }
@@ -70,6 +60,7 @@ class BookSelecter(val config: MyConfig) extends LoggingSupport {
       .replaceAll("漫画：", "")
       .replaceAll("原作：", "")
       .replaceAll("作画：.*", "")
+      .replaceAll("／.*", "")
       .replaceAll("　", " ")
       .split(" ").first
 
@@ -85,6 +76,7 @@ class BookSelecter(val config: MyConfig) extends LoggingSupport {
         publisherName = "",
         genre = "",
         salesDate = "",
+        itemCaption = "",
         image = Image(item.image_url, item.image_url, item.image_url, item.image_url, item.image_url),
         isbn = "",
         items = Set(item))
@@ -94,17 +86,7 @@ class BookSelecter(val config: MyConfig) extends LoggingSupport {
       val books = BookDao.find(MongoDBObject("isbn" -> result.isbn)).toList
       if (books.isEmpty) {
         debug("create new book [%s].".format(title))
-        Book(
-          title = result.title,
-          author = result.author,
-          seriesName = result.seriesName,
-          publisherName = result.publisherName,
-          genre = result.size,
-          salesDate = result.salesDate,
-          image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original),
-          isbn = result.isbn,
-          items = Set(item))
-
+        buildBook(item, result)
       } else {
         debug("update book [%s].".format(title))
         books.first.addItem(item)
@@ -121,5 +103,19 @@ class BookSelecter(val config: MyConfig) extends LoggingSupport {
     import com.ibm.icu.text.Transliterator
     val transliterator = Transliterator.getInstance("Fullwidth-Halfwidth")
     transliterator.transliterate(str)
+  }
+
+  private def buildBook(item: Item, result: RakutenItem): cn.orz.pascal.scala.ebooksearch.models.Book = {
+    Book(
+      title = result.title,
+      author = result.author,
+      seriesName = result.seriesName,
+      publisherName = result.publisherName,
+      genre = result.size,
+      salesDate = result.salesDate,
+      itemCaption = result.itemCaption,
+      image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original),
+      isbn = result.isbn,
+      items = Set(item))
   }
 }

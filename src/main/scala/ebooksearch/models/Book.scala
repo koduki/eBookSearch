@@ -18,15 +18,16 @@ case class Book(
   val publisherName: String,
   val genre: String,
   val salesDate: String,
+  val itemCaption: String,
   val image: Image,
   val items: Set[Item]) {
 
   def addItem(item: Item): Book = {
-    Book(this.id, this.isbn, this.title, this.author, this.seriesName, this.publisherName, this.genre, this.salesDate, this.image, this.items + item)
+    Book(this.id, this.isbn, this.title, this.author, this.seriesName, this.publisherName, this.genre, this.salesDate, this.itemCaption, this.image, this.items + item)
   }
 
   def removeItem(item: Item): Book = {
-    Book(this.id, this.isbn, this.title, this.author, this.seriesName, this.publisherName, this.genre, this.salesDate, this.image, this.items - item)
+    Book(this.id, this.isbn, this.title, this.author, this.seriesName, this.publisherName, this.genre, this.salesDate, this.itemCaption, this.image, this.items - item)
   }
 }
 

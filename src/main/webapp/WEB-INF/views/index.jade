@@ -1,8 +1,9 @@
 -@ val feeds: Map[(cn.orz.pascal.scala.ebooksearch.models.Provider, java.util.Date), Set[cn.orz.pascal.scala.ebooksearch.models.Book]]
+-@ val bookCount: Long
 p
   | e-Ndex へ ようこそ.
   br/
-  | このサイトでは電子書籍の横断検索です.
+  | 現在、#{bookCount}冊の電子書籍が保管されています。
 form#search{:action => "/search", :method => "get"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}
@@ -14,6 +15,9 @@ section#feeds
     section.feed
       h2 
         a(href="#{feed._1._1.url}") #{feed._1._2} - #{feed._1._1.name}
+      span
+        .news 
+          a(href="/news/#{feed._1._1.name}") もっと見る
       ul
         - for(item <- feed._2)
           li

@@ -13,6 +13,7 @@ case class RakutenItem(
   val publisherName: String,
   val size: String,
   val salesDate: String,
+  val itemCaption: String,
   val image: Image)
 
 class RakutenBooks(val developerId: String) {
@@ -37,6 +38,7 @@ class RakutenBooks(val developerId: String) {
       val publisherName = item \ "publisherName" text
       val size = item \ "size" text
       val salesDate = item \ "salesDate" text
+      val itemCaption = item \ "itemCaption" text
 
       val baseImageUrl = (item \ "largeImageUrl" text).replaceAll("""\?_ex=.*""", "")
       val image = Image(
@@ -46,7 +48,7 @@ class RakutenBooks(val developerId: String) {
         baseImageUrl + "?_ext=260x260",
         baseImageUrl)
 
-      RakutenItem(isbn, title, author, seriesName, publisherName, size, salesDate, image)
+      RakutenItem(isbn, title, author, seriesName, publisherName, size, salesDate, itemCaption, image)
     }.toList
   }
 }

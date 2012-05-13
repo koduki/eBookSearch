@@ -24,27 +24,35 @@ import com.novus.salat.global._
 class WebFront extends BasicServlet {
   val config = ConfigReader[MyConfig]("config.scala")
 
-  get("/") {
-    def getFeeds(provider: Provider) = {
-    val selecter = new BookSelecter(config)
- 
+      def getFeeds(provider: Provider, size:Int) = {
+      val selecter = new BookSelecter(config)
       FeedItemDao
         .find((MongoDBObject("_id.provider" -> grater[Provider].asDBObject(provider))))
         .sort(orderBy = MongoDBObject("createdAt" -> -1))
-        .limit(8)
+        .limit(size)
         .toList
         .foldLeft(Map[(Provider, java.util.Date), List[Item]]()) { (r, x) =>
           val createdAt = dateTrim(x.createdAt)
           val list = if (r.contains((provider, createdAt))) { r(provider, createdAt) } else { List[Item]() }
           r + ((provider, createdAt) -> (list ++ List(x.item)))
-        }.map{ x =>
+        }.map { x =>
           x._1 -> x._2.map(item => selecter.select(item)).toSet
         }
     }
+  
+  get("/") {
+    val feeds = getFeeds(Providers.bookWalker, 8) ++ getFeeds(Providers.paburi, 8) ++ getFeeds(Providers.eBookJapan, 8)
+    val bookCount = BookDao.count()
 
-    val feeds = getFeeds(Providers.bookWalker) ++ getFeeds(Providers.paburi) ++ getFeeds(Providers.eBookJapan)
+    jade("index", "feeds" -> feeds, "bookCount" -> bookCount)
+  }
 
-    jade("index", "feeds" -> feeds)
+  get("/news/:provider_name") {
+    val provider = Providers(params("provider_name"))
+    val feeds = getFeeds(provider, 100)
+    val bookCount = BookDao.count()
+
+    jade("index", "feeds" -> feeds, "bookCount" -> bookCount)
   }
 
   get("/search") {
