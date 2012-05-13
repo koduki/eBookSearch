@@ -4,6 +4,8 @@
 -@ val nextBkw:Int
 -@ val nextEbj:Int
 -@ val nextPbr:Int
+link{:rel => "stylesheet/less", :href => "/css/search.less", :type => "text/css"}
+
 form#search{:action => "/search", :method => "get"}
   input#q{:type => "text", :name => "q", :value => query}
   input#bkw{:type => "hidden", :name => "bkw", :value => nextBkw}
