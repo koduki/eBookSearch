@@ -5,7 +5,7 @@ import com.twitter.util.Eval
 object ConfigReader {
   val pool = scala.collection.mutable.Map[String, Any]()
 
-  def apply[T](name: String):T = {
+  def apply[T](name: String): T = {
     if (pool.contains(name)) {
       pool(name).asInstanceOf[T]
     } else {

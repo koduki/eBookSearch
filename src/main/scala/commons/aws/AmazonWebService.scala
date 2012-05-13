@@ -3,10 +3,10 @@ package cn.orz.pascal.commons.aws
 import scala.io.Source
 import scala.xml.XML
 
+case class Image(val small: String, val medium: String, val large: String)
+case class Item(val title: String, val author: String, val manufacturer: String, val detailUrl: String, val image: Image, val asin: String)
 class AmazonWebService(awsAccessKeyId: String, awsSecretKey: String, associateTag: String) {
   val signedRequestsHelper = new SignedRequestsHelper()
-  case class Image(val small: String, val medium: String, val large: String)
-  case class Item(val title: String, val author: String, val manufacturer: String, val detailUrl: String, val image: Image, val asin: String)
   def searchItem(keyword: String): List[Item] = {
     val params = Map(
       "Version" -> "2009-07-01",
@@ -15,6 +15,7 @@ class AmazonWebService(awsAccessKeyId: String, awsSecretKey: String, associateTa
       "ResponseGroup" -> "Images,Small",
       "Keywords" -> keyword,
       "AssociateTag" -> associateTag,
+      "Sort" -> "titlerank",
       "Service" -> "AWSECommerceService")
 
     val queryUrl = signedRequestsHelper.sign(awsAccessKeyId, awsSecretKey)(params)
