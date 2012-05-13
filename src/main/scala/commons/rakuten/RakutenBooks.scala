@@ -4,8 +4,16 @@ import scala.xml.XML
 import java.net.URL
 import cn.orz.pascal.scala.commons.utils.NetUtils._
 
-case class Image(val small: String, val medium: String, val large: String)
-case class RakutenItem(val isbn:String, val title: String, val author: String, val manufacturer: String,val image: Image)
+case class Image(val small: String, val medium: String, val large: String, val veryLarge:String, val original:String)
+case class RakutenItem(
+  val isbn:String, 
+  val title: String, 
+  val author: String, 
+  val seriesName: String,
+  val publisherName: String,
+  val size: String,
+  val salesDate: String,
+  val image: Image)
 
 class RakutenBooks(val developerId:String) {
   def search(title:String, author:String):List[RakutenItem] = {
@@ -25,10 +33,21 @@ class RakutenBooks(val developerId:String) {
       val title = item \ "title" text
       val author  = item \ "author" text
       val isbn = item \ "isbn" text
-      val manufacturer  = (item \ "seriesName" text) + " - " + (item \ "publisherName" text)
+      val seriesName  = item \ "seriesName" text
+      val publisherName = item \ "publisherName" text
+      val size = item \ "size" text
+      val salesDate = item \ "salesDate" text
 
-      val image =Image(item \ "smallImageUrl" text, item \ "mediumImageUrl" text, item \ "largeImageUrl" text)
-      RakutenItem(isbn, title, author, manufacturer, image)
+      val baseImageUrl = (item \ "largeImageUrl" text).replaceAll("""\?_ex=.*""", "")
+      val image =Image(
+          item \ "smallImageUrl" text, 
+          item \ "mediumImageUrl" text, 
+          item \ "largeImageUrl" text,
+          baseImageUrl + "?_ext=260x260",
+          baseImageUrl
+        )
+
+      RakutenItem(isbn, title, author, seriesName, publisherName, size, salesDate, image)
     }.toList
   }
 }

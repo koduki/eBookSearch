@@ -26,7 +26,16 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
         throw new Exception("not found book") 
       }
       val result = results.first
-      Book(title = result.title, author = result.author, publisher = result.manufacturer, image = Image(result.image.small, result.image.medium, result.image.large), isbn = result.isbn, items = Set(item))
+      Book(
+          title = result.title, 
+          author = result.author, 
+          seriesName = result.seriesName, 
+          publisherName = result.publisherName, 
+          genre = result.size, 
+          salesDate = result.salesDate, 
+          image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original), 
+          isbn = result.isbn, 
+          items = Set(item))
     } else {
       another.first
     }
@@ -60,13 +69,33 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
 
     if (results.isEmpty) {
       info("%s is not found.".format(title))
-      Book(title = item.title, author = item.author, publisher = "", image = Image(item.image_url, item.image_url, item.image_url), isbn = "", items = Set(item))
+      Book(
+          title = item.title, 
+          author = item.author, 
+          seriesName = "", 
+          publisherName = "", 
+          genre = "", 
+          salesDate = "", 
+          image = Image(item.image_url, item.image_url, item.image_url, item.image_url, item.image_url), 
+          isbn = "", 
+          items = Set(item))
+ 
     } else {
       val result = selectBestFitBook(item, results)
       val books = BookDao.find(MongoDBObject("isbn" -> result.isbn)).toList
       if (books.isEmpty) {
         debug("create new book [%s].".format(title))
-        Book(title = result.title, author = result.author, publisher = result.manufacturer, image = Image(result.image.small, result.image.medium, result.image.large), isbn = result.isbn, items = Set(item))
+        Book(
+          title = result.title, 
+          author = result.author, 
+          seriesName = result.seriesName, 
+          publisherName = result.publisherName, 
+          genre = result.size, 
+          salesDate = result.salesDate, 
+          image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original), 
+          isbn = result.isbn, 
+          items = Set(item))
+ 
       } else {
         debug("update book [%s].".format(title))
         books.first.addItem(item)

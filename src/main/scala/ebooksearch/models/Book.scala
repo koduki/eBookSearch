@@ -8,14 +8,26 @@ import com.novus.salat.dao._
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.MongoConnection
 
-case class Image(val small: String, val medium: String, val large: String)
-case class Book(@Key("_id") id: ObjectId = new ObjectId, isbn: String, title: String, author: String, publisher: String, image: Image, items: Set[Item]) {
-  def addItem(item: Item) = {
-    Book(this.id, this.isbn, this.title, this.author, this.publisher, this.image, this.items + item)
+case class Image(val small: String, val medium: String, val large: String, val veryLarge:String, val original:String)
+case class Book(
+  @Key("_id") id: ObjectId = new ObjectId, 
+  val isbn: String, 
+  val title: String, 
+  val author: String, 
+  val seriesName: String,
+  val publisherName: String,
+  val genre: String,
+  val salesDate: String,
+  val image: Image,
+  val items: Set[Item]
+){
+  
+  def addItem(item: Item):Book = {
+    Book(this.id, this.isbn, this.title, this.author, this.seriesName, this.publisherName, this.genre, this.salesDate, this.image, this.items + item)
   }
 
-  def removeItem(item: Item) = {
-    Book(this.id, this.isbn, this.title, this.author, this.publisher, this.image, this.items - item)
+  def removeItem(item: Item):Book = {
+    Book(this.id, this.isbn, this.title, this.author, this.seriesName, this.publisherName, this.genre, this.salesDate, this.image, this.items - item)
   }
 }
 

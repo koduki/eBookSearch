@@ -14,10 +14,12 @@ section#bookDetail
     ul
       li #{book.title} 
       li #{book.author} 
-      li #{book.publisher} 
+      li #{book.seriesName} - #{book.publisherName} 
       li #{book.isbn} 
+      li #{book.genre} 
+      li #{book.salesDate} 
       li
-        img(src="#{book.image.large}")
+        img(src="#{book.image.original}")
 
     h3 取り扱いストア
     ul
