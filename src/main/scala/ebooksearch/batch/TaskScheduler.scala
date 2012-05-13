@@ -13,7 +13,7 @@ class NewItemCrawlerJob extends Job with LoggingSupport {
   def execute(context: JobExecutionContext) {
     val crawler = new NewItemCrawler()
     info("start clawling")
-//    crawler.crawl
+    crawler.crawl
     info("end clawling")
   }
 }

@@ -24,27 +24,27 @@ import com.novus.salat.global._
 class WebFront extends BasicServlet {
   val config = ConfigReader[MyConfig]("config.scala")
 
-      def getFeeds(provider: Provider, size:Int) = {
-      val selecter = new BookSelecter(config)
-      FeedItemDao
-        .find((MongoDBObject("_id.provider" -> grater[Provider].asDBObject(provider))))
-        .sort(orderBy = MongoDBObject("createdAt" -> -1))
-        .limit(size)
-        .toList
-        .foldLeft(Map[(Provider, java.util.Date), List[Item]]()) { (r, x) =>
-          val createdAt = dateTrim(x.createdAt)
-          val list = if (r.contains((provider, createdAt))) { r(provider, createdAt) } else { List[Item]() }
-          r + ((provider, createdAt) -> (list ++ List(x.item)))
-        }.map { x =>
-          x._1 -> x._2.map(item => selecter.select(item)).toSet
-        }
-    }
-  
+  def getFeeds(provider: Provider, size: Int) = {
+    val selecter = new BookSelecter(config)
+    FeedItemDao
+      .find((MongoDBObject("_id.provider" -> grater[Provider].asDBObject(provider))))
+      .sort(orderBy = MongoDBObject("createdAt" -> -1))
+      .limit(size)
+      .toList
+      .foldLeft(Map[(Provider, java.util.Date), List[Item]]()) { (r, x) =>
+        val createdAt = dateTrim(x.createdAt)
+        val list = if (r.contains((provider, createdAt))) { r(provider, createdAt) } else { List[Item]() }
+        r + ((provider, createdAt) -> (list ++ List(x.item)))
+      }.map { x =>
+        x._1 -> x._2.map(item => selecter.select(item)).toSet
+      }
+  }
+
   get("/") {
     val feeds = getFeeds(Providers.bookWalker, 8) ++ getFeeds(Providers.paburi, 8) ++ getFeeds(Providers.eBookJapan, 8)
     val bookCount = BookDao.count()
 
-    jade("index", "feeds" -> feeds, "bookCount" -> bookCount)
+    jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> "Top:")
   }
 
   get("/news/:provider_name") {
@@ -52,7 +52,7 @@ class WebFront extends BasicServlet {
     val feeds = getFeeds(provider, 100)
     val bookCount = BookDao.count()
 
-    jade("index", "feeds" -> feeds, "bookCount" -> bookCount)
+    jade("index", "feeds" -> feeds, "bookCount" -> bookCount	, "title" -> ("新着:" + provider.name))
   }
 
   get("/search") {
@@ -82,6 +82,7 @@ class WebFront extends BasicServlet {
 
     jade("search",
       "books" -> books,
+      "title" -> "検索結果",
       "pageNumber" -> pageNumber,
       "nextBkw" -> (if (hasNextBKW) { 1 } else { 0 }),
       "nextEbj" -> (if (hasNextEBJ) { 1 } else { 0 }),
@@ -116,7 +117,7 @@ class WebFront extends BasicServlet {
     if (book == null) {
       resourceNotFound()
     } else {
-      jade("book", "book" -> book)
+      jade("book", "book" -> book, "title" -> book.title)
     }
   }
 
