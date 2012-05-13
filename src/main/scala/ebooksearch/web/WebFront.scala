@@ -8,7 +8,6 @@ import cn.orz.pascal.scala.ebooksearch.models._
 import cn.orz.pascal.scala.commons.utils.LoggingSupport
 import cn.orz.pascal.scala.commons.utils.DateUtils._
 import cn.orz.pascal.scala.commons.utils.ConfigReader
-import cn.orz.pascal.commons.aws.AmazonWebService
 import cn.orz.pascal.scala.commons.utils.LevenshteinDistance
 import cn.orz.pascal.scala.ebooksearch.agent._
 import cn.orz.pascal.scala.ebooksearch.config._
@@ -57,9 +56,9 @@ class WebFront extends BasicServlet {
       .map(x => future { x.search(query, pageNumber) })
       .map(_())
 
-    val aws = new AmazonWebService(config.amazon.accessKeyId, config.amazon.secretKey, config.amazon.associateTag)
     val items = results.map { x => x._1 }.fold(List[Item]()) { (r, item) => r ++ item }
-    val books = items.map { item => BookSelecter.select(aws, item) }
+    val selecter = new BookSelecter(config)
+    val books = items.map { item => selecter.select(item) }
 
     val hasNexts = results.map { x => x._2 }
     hasNextBKW = hasNexts(0)
