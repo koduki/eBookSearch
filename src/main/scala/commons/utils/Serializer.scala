@@ -6,7 +6,7 @@ object Serializer {
   import sun.misc.BASE64Encoder
   import sun.misc.BASE64Decoder
 
-  def serialize[T](obj:T): String = {
+  def serialize[T](obj: T): String = {
     val byteArray = new ByteArrayOutputStream();
     val data = try {
       val os = new ObjectOutputStream(byteArray);
