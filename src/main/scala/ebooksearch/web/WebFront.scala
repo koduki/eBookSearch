@@ -104,7 +104,12 @@ class WebFront extends BasicServlet {
   get("/books/:oid") {
     val oid = new ObjectId(params("oid"))
     val book = BookDao.findOneByID(oid) match { case Some(x) => x; case _ => null }
-    jade("book", "book" -> book)
+
+    if (book == null) {
+      resourceNotFound()
+    } else {
+      jade("book", "book" -> book)
+    }
   }
 
   get("/api/books") {
