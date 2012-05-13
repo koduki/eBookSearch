@@ -31,6 +31,7 @@ class BookSelecter(val config:MyConfig) extends LoggingSupport {
       another.first
     }
     BookDao.save(book.addItem(item))
+    info("%s change to %s from %s .".format(item.title + ":" + item.provider.name, book.id, source.id))
     book
   }
 

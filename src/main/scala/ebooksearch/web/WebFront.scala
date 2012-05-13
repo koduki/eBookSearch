@@ -26,6 +26,8 @@ class WebFront extends BasicServlet {
 
   get("/") {
     def getFeeds(provider: Provider) = {
+    val selecter = new BookSelecter(config)
+ 
       FeedItemDao
         .find((MongoDBObject("_id.provider" -> grater[Provider].asDBObject(provider))))
         .sort(orderBy = MongoDBObject("createdAt" -> -1))
@@ -35,6 +37,8 @@ class WebFront extends BasicServlet {
           val createdAt = dateTrim(x.createdAt)
           val list = if (r.contains((provider, createdAt))) { r(provider, createdAt) } else { List[Item]() }
           r + ((provider, createdAt) -> (list ++ List(x.item)))
+        }.map{ x =>
+          x._1 -> x._2.map(item => selecter.select(item)).toSet
         }
     }
 
@@ -59,7 +63,7 @@ class WebFront extends BasicServlet {
 
     val items = results.map { x => x._1 }.fold(List[Item]()) { (r, item) => r ++ item }
     val selecter = new BookSelecter(config)
-    val books = items.map { item => selecter.select(item) }
+    val books = items.map { item => selecter.select(item) }.toSet
 
     val hasNexts = results.map { x => x._2 }
     hasNextBKW = hasNexts(0)
