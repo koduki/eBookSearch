@@ -27,7 +27,7 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1" % "test"
 
 libraryDependencies += "com.novus" %% "salat-core" % "0.0.8-SNAPSHOT" 
 
-libraryDependencies += "org.quartz-scheduler" % "quartz" % "2.0.2"
+libraryDependencies += "org.quartz-scheduler" % "quartz" % "2.1.4"
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.3"
 
