@@ -8,13 +8,19 @@ import cn.orz.pascal.commons.rakuten.RakutenItem
 import cn.orz.pascal.scala.commons.utils.LoggingSupport
 import cn.orz.pascal.scala.commons.utils.ConfigReader
 import cn.orz.pascal.scala.commons.utils.LevenshteinDistance
+import cn.orz.pascal.scala.commons.utils.DateUtils._
 import com.mongodb.casbah.Imports._
 import com.novus.salat.global._
 import com.novus.salat._
 import com.novus.salat.annotations._
 import com.novus.salat.global._
 
-class BookSelecter(val config: MyConfig) extends LoggingSupport {
+object Books {
+  def apply(config: MyConfig): Books = {
+    new Books(config)
+  }
+}
+class Books(val config: MyConfig) extends LoggingSupport {
   def change(source: Book, item: Item, isbn: String): Book = {
     BookDao.save(source.removeItem(item))
 
@@ -47,6 +53,22 @@ class BookSelecter(val config: MyConfig) extends LoggingSupport {
       books.first
     }
     result
+  }
+
+  def getFeeds(provider: Provider, size: Int) = {
+    val selecter = new Books(config)
+    FeedItemDao
+      .find((MongoDBObject("_id.provider" -> grater[Provider].asDBObject(provider))))
+      .sort(orderBy = MongoDBObject("createdAt" -> -1))
+      .limit(size)
+      .toList
+      .foldLeft(Map[(Provider, java.util.Date), List[Item]]()) { (r, x) =>
+        val createdAt = dateTrim(x.createdAt)
+        val list = if (r.contains((provider, createdAt))) { r(provider, createdAt) } else { List[Item]() }
+        r + ((provider, createdAt) -> (list ++ List(x.item)))
+      }.map { x =>
+        x._1 -> x._2.map(item => selecter.select(item)).toSet
+      }.toList.sort((x, y) => x._1._2 > y._1._2)
   }
 
   private def selectFromRakuten(item: Item): Book = {
