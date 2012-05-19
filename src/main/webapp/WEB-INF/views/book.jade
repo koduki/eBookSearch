@@ -36,7 +36,9 @@ section#shops
           input{:type => "hidden", :value => {item.image_url}, :name => "image_url"}
           input{:type => "hidden", :value => {item.provider.name}, :name => "provider_name"}
           input{:type => "hidden", :value => {book.id}, :name => "oid"}
-          p 
+          p.isbn
             span ISBN:
-            input.isbn{:type => "text", :value => "", :name => "isbn"}
+            input{:type => "text", :value => "", :name => "isbn"}
             input{:type =>"submit", :value => "別な本に付替える"}
+
+script{:src => "/coffee/book.coffee", :type => "text/coffeescript"}

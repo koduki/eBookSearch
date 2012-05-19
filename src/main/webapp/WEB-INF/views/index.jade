@@ -5,7 +5,8 @@ link{:rel => "stylesheet/less", :href => "/css/search.less", :type => "text/css"
 p
   | e-Ndex へ ようこそ.
   br/
-  | 現在、#{bookCount}冊の電子書籍が保管されています。
+  | タイトルをベースとした自動登録をベースとした電子書籍のソーシャルインデックスサービスです.
+p 現在、保管されている電子書籍は #{bookCount} 冊.
 form#search{:action => "/search", :method => "get"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}

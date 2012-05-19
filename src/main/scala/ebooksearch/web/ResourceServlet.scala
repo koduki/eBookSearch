@@ -14,6 +14,8 @@ class ResourceServlet extends HttpServlet {
     "html" -> "text/html",
     "css" -> "text/css",
     "less" -> "text/less",
+    "css" -> "text/css",
+    "coffee" -> "text/coffeescript",
     "js" -> "text/javascript")
 
   override def service(req: HttpServletRequest, res: HttpServletResponse) {
