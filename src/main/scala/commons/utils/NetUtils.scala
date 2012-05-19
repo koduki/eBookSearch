@@ -1,5 +1,5 @@
 // vim: set ts=2 sw=2 et:
-package cn.orz.pascal.scala.commons.utils
+package cn.orz.pascal.commons.utils
 
 object NetUtils {
   def utf8(text: String) = java.net.URLEncoder.encode(text, "UTF-8")

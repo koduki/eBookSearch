@@ -2,7 +2,7 @@
 package cn.orz.pascal.commons.rakuten
 import scala.xml.XML
 import java.net.URL
-import cn.orz.pascal.scala.commons.utils.NetUtils._
+import cn.orz.pascal.commons.utils.NetUtils._
 
 case class Image(val small: String, val medium: String, val large: String, val veryLarge: String, val original: String)
 case class RakutenItem(

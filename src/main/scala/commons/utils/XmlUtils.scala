@@ -1,4 +1,4 @@
-package cn.orz.pascal.scala.commons.utils
+package cn.orz.pascal.commons.utils
 
 import scala.xml.Node
 

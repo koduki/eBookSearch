@@ -1,5 +1,5 @@
 // vim: set ts=4 sw=4 et:
-package cn.orz.pascal.scala.commons.utils
+package cn.orz.pascal.commons.utils
 
 object Serializer {
   import java.io._

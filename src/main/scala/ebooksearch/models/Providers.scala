@@ -1,4 +1,4 @@
-package cn.orz.pascal.scala.ebooksearch.models
+package cn.orz.pascal.ebooksearch.models
 
 object Providers {
   val items = Map(

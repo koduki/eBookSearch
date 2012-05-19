@@ -1,5 +1,5 @@
 // vim: set ts=4 sw=4 et:
-package cn.orz.pascal.scala.commons.utils
+package cn.orz.pascal.commons.utils
 import com.twitter.util.Eval
 
 object ConfigReader {

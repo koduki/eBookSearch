@@ -1,14 +1,14 @@
-package cn.orz.pascal.scala.ebooksearch.models
+package cn.orz.pascal.ebooksearch.models
 
-import cn.orz.pascal.scala.ebooksearch.models._
-import cn.orz.pascal.scala.ebooksearch.agent._
-import cn.orz.pascal.scala.ebooksearch.config.MyConfig
+import cn.orz.pascal.ebooksearch.models._
+import cn.orz.pascal.ebooksearch.agent._
+import cn.orz.pascal.ebooksearch.config.MyConfig
 import cn.orz.pascal.commons.rakuten.RakutenBooks
 import cn.orz.pascal.commons.rakuten.RakutenItem
-import cn.orz.pascal.scala.commons.utils.LoggingSupport
-import cn.orz.pascal.scala.commons.utils.ConfigReader
-import cn.orz.pascal.scala.commons.utils.LevenshteinDistance
-import cn.orz.pascal.scala.commons.utils.DateUtils._
+import cn.orz.pascal.commons.utils.LoggingSupport
+import cn.orz.pascal.commons.utils.ConfigReader
+import cn.orz.pascal.commons.utils.LevenshteinDistance
+import cn.orz.pascal.commons.utils.DateUtils._
 import com.mongodb.casbah.Imports._
 import com.novus.salat.global._
 import com.novus.salat._
@@ -127,7 +127,7 @@ class Books(val config: MyConfig) extends LoggingSupport {
     transliterator.transliterate(str)
   }
 
-  private def buildBook(item: Item, result: RakutenItem): cn.orz.pascal.scala.ebooksearch.models.Book = {
+  private def buildBook(item: Item, result: RakutenItem): cn.orz.pascal.ebooksearch.models.Book = {
     Book(
       title = result.title,
       author = result.author,

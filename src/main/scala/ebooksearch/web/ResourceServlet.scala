@@ -1,4 +1,4 @@
-package cn.orz.pascal.scala.ebooksearch.web
+package cn.orz.pascal.ebooksearch.web
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse

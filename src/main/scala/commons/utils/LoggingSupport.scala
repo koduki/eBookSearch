@@ -1,4 +1,4 @@
-package cn.orz.pascal.scala.commons.utils
+package cn.orz.pascal.commons.utils
 // vim: set ts=2 sw=2 et:
 
 import ch.qos.logback._

@@ -1,4 +1,4 @@
-package cn.orz.pascal.scala.ebooksearch.models
+package cn.orz.pascal.ebooksearch.models
 
 // vim: set ts=2 sw=2 et:
 case class Provider(name: String, url: String)
