@@ -89,21 +89,36 @@ class WebFront extends BasicServlet {
 
     val item = Item(title, url, value, author, authorUrl, imageUrl, Providers(providerName))
 
-    val book = BookDao.findOneByID(oid) match { case Some(x) => x; case _ => null }
+    val book = BookDao.findOneByID(oid)
     val selecter = new Books(config)
 
-    val newBook = selecter.change(book, item, isbn)
-    redirect("/books/" + newBook.id)
+    selecter.change(book, item, isbn) match {
+      case Some(newBook) => redirect("/books/" + newBook.id)
+      case None => {
+        session.setAttribute("message", "ISBN: " + isbn + " は見つかりませんでした.")
+        redirect("/books/" + oid)
+      }
+    }
+
   }
 
   get("/books/:oid") {
     val oid = new ObjectId(params("oid"))
+    debug("oid is " + oid)
     val book = BookDao.findOneByID(oid) match { case Some(x) => x; case _ => null }
+    val message = if (session.contains("message")) {
+      val msg = session("message")
+      session.removeAttribute("message")
+      debug("message is " + msg)
+      msg
+    } else {
+      ""
+    }
 
     if (book == null) {
       resourceNotFound()
     } else {
-      jade("book", "book" -> book, "title" -> book.title)
+      jade("book", "book" -> book, "title" -> book.title, "message" -> message)
     }
   }
 

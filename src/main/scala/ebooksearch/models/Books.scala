@@ -21,28 +21,34 @@ object Books {
   }
 }
 class Books(val config: MyConfig) extends LoggingSupport {
-  def change(source: Book, item: Item, isbn: String): Book = {
-    info("isbn is %s".format(isbn))
-    if (isbn.isEmpty()) {
-      throw new IllegalArgumentException("blank isbn.")
-    }
+  def change(source: Option[Book], item: Item, isbn: String): Option[Book] = {
+    source match {
+      case Some(sourceBook) => {
 
-    val another = BookDao.find(MongoDBObject("isbn" -> isbn)).toList
-    val book = if (another.isEmpty) {
-      val rbs = new RakutenBooks(config.rakuten.developerId)
-      val results = rbs.search(isbn)
-      if (results.isEmpty) {
-        throw new Exception("not found book")
+        info("isbn is %s".format(isbn))
+        if (isbn.isEmpty()) {
+          return None
+        }
+
+        val another = BookDao.find(MongoDBObject("isbn" -> isbn)).toList
+        val book = if (another.isEmpty) {
+          val rbs = new RakutenBooks(config.rakuten.developerId)
+          val results = rbs.search(isbn)
+          if (results.isEmpty) {
+            return None
+          }
+          buildBook(item, results.first)
+        } else {
+          another.first
+        }
+        BookDao.save(book.addItem(item))
+        BookDao.save(sourceBook.removeItem(item))
+
+        info("%s change to %s from %s .".format(item.title + ":" + item.provider.name, book.id, sourceBook.id))
+        Some(book)
       }
-      buildBook(item, results.first)
-    } else {
-      another.first
+      case None => None
     }
-    BookDao.save(book.addItem(item))
-    BookDao.save(source.removeItem(item))
-
-    info("%s change to %s from %s .".format(item.title + ":" + item.provider.name, book.id, source.id))
-    book
   }
 
   def select(item: Item): Book = {

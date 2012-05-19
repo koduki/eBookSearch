@@ -1,10 +1,12 @@
 -@ val book: cn.orz.pascal.ebooksearch.models.Book
+-@ val message: String
 link{:rel => "stylesheet/less", :href => "/css/book.less", :type => "text/css"}
 
 form#search{:action => "/search", :method => "get"}
   input#q{:type => "text", :name => "q"} 
   input{:type =>"submit", :value => "search"}
 
+p.message #{message}
 section#bookDetail
   header
     h1 #{book.title}
