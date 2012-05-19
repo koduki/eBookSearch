@@ -12,7 +12,7 @@ import ch.qos.logback._
 import org.slf4j._
 
 trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSupport {
-  def validateParam(name: String, default: Boolean):Boolean = {
+  def validateParam(name: String, default: Boolean): Boolean = {
     if (params.contains(name) && (params(name).matches("[01]"))) {
       params(name) == "1"
     } else {
@@ -20,7 +20,7 @@ trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSuppo
     }
   }
 
-  def validateParam(name: String, default: Int):Int = {
+  def validateParam(name: String, default: Int): Int = {
     if (params.contains(name) && params(name).matches("""\d""")) {
       params(name).toInt
     } else {
@@ -31,7 +31,7 @@ trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSuppo
   beforeAll {
     contentType = "text/html"
   }
-  
+
   override def get(routeMatchers: RouteMatcher*)(action: ⇒ Any): Route = {
     val result = super.get(routeMatchers: _*) {
       val start = java.lang.System.currentTimeMillis()
@@ -41,5 +41,14 @@ trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSuppo
     }
 
     result
+  }
+
+  override def resourceNotFound(): Any = {
+    if (isDevelopmentMode) {
+      super.resourceNotFound();
+    } else {
+      response.setStatus(404)
+      servletContext.getRequestDispatcher("/error/404.html").forward(request, response)
+    }
   }
 }

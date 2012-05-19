@@ -11,9 +11,11 @@ class ResourceServlet extends HttpServlet {
     "png" -> "image/png",
     "ico" -> "image/vnd.microsoft.icon",
     "txt" -> "text/plain",
+    "html" -> "text/html",
     "css" -> "text/css",
     "less" -> "text/less",
     "js" -> "text/javascript")
+
   override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
     val path = getServletContext().getRealPath(req.getRequestURI())
 

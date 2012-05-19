@@ -25,6 +25,8 @@ class WebFront extends BasicServlet {
   val config = ConfigReader[MyConfig]("config.scala")
 
   get("/") {
+    info("development mode is " + isDevelopmentMode)
+
     val feeds = Books(config).getFeeds(Providers.bookWalker, 8) ++ Books(config).getFeeds(Providers.paburi, 8) ++ Books(config).getFeeds(Providers.eBookJapan, 8)
     val bookCount = BookDao.count()
 
