@@ -16,7 +16,7 @@ class ResourceServlet extends HttpServlet {
     "less" -> "text/less",
     "js" -> "text/javascript")
 
-  override def doGet(req: HttpServletRequest, res: HttpServletResponse) {
+  override def service(req: HttpServletRequest, res: HttpServletResponse) {
     val path = getServletContext().getRealPath(req.getRequestURI())
 
     val file = new File(path)

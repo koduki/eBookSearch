@@ -1,3 +1,4 @@
+// vim: set ts=2 sw=2 et:
 package cn.orz.pascal.ebooksearch.agent
 import cn.orz.pascal.ebooksearch.models._
 import cn.orz.pascal.commons.utils.XmlUtils._
@@ -5,7 +6,7 @@ import se.fishtank.css.selectors.Selectors._
 import cn.orz.pascal.mechanize._
 import scala.xml.NodeSeq
 import scala.xml.Node
-// vim: set ts=2 sw=2 et:
+
 class BookWalkerAgent extends SimpleAgent {
   override def provider = Providers.bookWalker
   
@@ -15,7 +16,7 @@ class BookWalkerAgent extends SimpleAgent {
     val nodes = page.get(Class("sectionWrap")) $ "[class=itemWrap]"
 
     nodes.map { node =>
-      Thread.sleep(500)
+      Thread.sleep(1000)
       val url = (node $ "[class=title] > a") attr "href"
       val itemPage = agent.get(url)
       debug("url:%s".format(url))

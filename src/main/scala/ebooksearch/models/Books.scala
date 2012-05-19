@@ -22,6 +22,11 @@ object Books {
 }
 class Books(val config: MyConfig) extends LoggingSupport {
   def change(source: Book, item: Item, isbn: String): Book = {
+    debug("isbn is %s".format(isbn))
+    if (isbn.isEmpty()) {
+      throw new IllegalArgumentException("blank isbn.")
+    }
+
     BookDao.save(source.removeItem(item))
 
     val another = BookDao.find(MongoDBObject("isbn" -> isbn)).toList
