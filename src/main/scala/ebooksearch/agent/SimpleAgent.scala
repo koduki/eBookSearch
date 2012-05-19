@@ -7,7 +7,6 @@ import scala.xml.NodeSeq
 
 // vim: set ts=2 sw=2 et:
 trait SimpleAgent extends Agent with LoggingSupport {
-  val provider: Provider
   var _hasNext = false
   def hasNext: Boolean = this._hasNext
 

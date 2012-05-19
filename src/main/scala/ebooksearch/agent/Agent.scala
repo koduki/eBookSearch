@@ -4,6 +4,7 @@ import cn.orz.pascal.commons.utils.LoggingSupport
 
 // vim: set ts=2 sw=2 et:
 trait Agent {
+  def provider:Provider
   def search(keyword: String, pageNumber:Int): (List[Item], Boolean)
   def getNewItems(): List[Item]
 }

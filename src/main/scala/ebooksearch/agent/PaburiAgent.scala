@@ -8,7 +8,7 @@ import scala.xml.Node
 
 // vim: set ts=2 sw=2 et:
 class PaburiAgent extends SimpleAgent {
-  override val provider = Providers.paburi
+  override def provider = Providers.paburi
 
   private def parseNode(node: Node) = {
     val baseUrl = "http://www.paburi.com"

@@ -7,7 +7,7 @@ import scala.xml.NodeSeq
 import scala.xml.Node
 // vim: set ts=2 sw=2 et:
 class BookWalkerAgent extends SimpleAgent {
-  override val provider = Providers.bookWalker
+  override def provider = Providers.bookWalker
   
   override def getNewItems(): List[Item] = {
     val agent = new Mechanize()

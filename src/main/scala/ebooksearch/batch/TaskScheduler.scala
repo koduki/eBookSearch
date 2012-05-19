@@ -11,10 +11,11 @@ import cn.orz.pascal.commons.utils.LoggingSupport
 
 class NewItemCrawlerJob extends Job with LoggingSupport {
   def execute(context: JobExecutionContext) {
-    val crawler = new NewItemCrawler()
-    info("start clawling")
-    crawler.crawl
-    info("end clawling")
+    loggingTime(
+      "START_JOB: clawling") {
+        val crawler = new NewItemCrawler()
+        crawler.crawl
+      }("END_JOB: clawling, proc time: %time (ms)")
   }
 }
 
