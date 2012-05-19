@@ -5,7 +5,5 @@ object ProjectBuild extends Build {
     lazy val root = Project( id = "root", base = file(".")).dependsOn(
         uri("git://github.com/koduki/mechanize.git"),
         uri("git://github.com/koduki/css-selectors-scala.git")
-//        uri("git://github.com/making/aws-apa.git"),
-//        uri("git://github.com/making/yalf.git")
     )
 }

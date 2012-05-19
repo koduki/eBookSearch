@@ -37,7 +37,7 @@ class WebFront extends BasicServlet {
         r + ((provider, createdAt) -> (list ++ List(x.item)))
       }.map { x =>
         x._1 -> x._2.map(item => selecter.select(item)).toSet
-      }
+      }.toList.sort((x, y) => x._1._2 > y._1._2)
   }
 
   get("/") {
@@ -52,7 +52,7 @@ class WebFront extends BasicServlet {
     val feeds = getFeeds(provider, 100)
     val bookCount = BookDao.count()
 
-    jade("index", "feeds" -> feeds, "bookCount" -> bookCount	, "title" -> ("新着:" + provider.name))
+    jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> ("新着:" + provider.name))
   }
 
   get("/search") {
