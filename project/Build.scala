@@ -3,31 +3,33 @@ import sbt.Keys._
 import sbt.IO._
 
 object ProjectBuild extends Build {
-  val demo = InputKey[Unit]("demo")
-  lazy val ExtraProps = config("extra-props") extend(Compile)
-  val demoTask = demo in ExtraProps <<= inputTask { (argTask: TaskKey[Seq[String]]) =>
-    // Here, we map the argument task `argTask`
-    // and a normal setting `scalaVersion`
-    (argTask, scalaVersion) map { (args: Seq[String], sv: String) =>
-        println("The current Scala version is " + sv)
-        println("The arguments to demo were:")
-        args foreach println
-     }
-   }
-  val prod = TaskKey[Unit]("env-production", "change prodction enviroment.")
-  val dev = TaskKey[Unit]("env-development", "change development enviroment.")
-  val envTaskProd = prod := envTask("prod")
-  val envTaskDev  = dev := envTask("dev")
+  val dependencyFiles = Seq("src/main/webapp/WEB-INF/web.xml")
 
-  def envTask(env:String) = {
-    val dir = "src/main/webapp/WEB-INF/"
-    val file = "web.xml"
+
+  val enviroment = InputKey[Unit]("enviroment", "chagen enviroment seting.")
+  val enviromentTask = enviroment <<= inputTask { (argTask: TaskKey[Seq[String]]) =>
+    argTask map { (args: Seq[String]) => 
+        changeEnviroment(args.first)
+    }
+  }
+
+  def changeEnviroment(env:String) = {
     println("change enviroment:" + env)
-    copyFile(new File(dir + file + "." + env), new File(dir + file))
+    dependencyFiles.foreach { path =>
+      val envPath = path + "." + env
+      val envFile = new File(envPath)
+      val msg = if (envFile.exists) {
+        copyFile(envFile, new File(path))
+        "copy:" + envPath
+      } else {
+        "not found:" + envPath
+      }
+      println(msg)
+    }
   }
 
   lazy val root = Project( id = "", base = file("."), 
-   settings = Defaults.defaultSettings ++ Seq(demoTask, envTaskProd, envTaskDev)).dependsOn(
+   settings = Defaults.defaultSettings ++ Seq(enviromentTask)).dependsOn(
     uri("git://github.com/koduki/mechanize.git"),
     uri("git://github.com/koduki/css-selectors-scala.git")
   )
