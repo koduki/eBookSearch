@@ -12,9 +12,6 @@
 		<init-param>
 			<param-name>org.scalatra.environment</param-name>
 			<param-value>production</param-value>
-			         <!-- 
-			<param-value>development</param-value>
-			          -->
 		</init-param>
 	</servlet>
 	<servlet>

@@ -10,17 +10,20 @@ object ProjectBuild extends Build {
   }
 
   val prod = TaskKey[Unit]("env-production", "change prodction enviroment.")
-  val envTask = prod := {
+  val dev = TaskKey[Unit]("env-development", "change development enviroment.")
+  val envTaskProd = prod := envTask("prod")
+  val envTaskDev  = dev := envTask("dev")
+
+  def envTask(env:String) = {
     val dir = "src/main/webapp/WEB-INF/"
     val file = "web.xml"
-    val env = "prod"
     println("change enviroment:" + env)
     copyFile(new File(dir + file + "." + env), new File(dir + file))
   }
 
 
   lazy val root = Project( id = "", base = file("."), 
-   settings = Defaults.defaultSettings ++ Seq(helloTask, envTask)).dependsOn(
+   settings = Defaults.defaultSettings ++ Seq(helloTask, envTaskProd, envTaskDev)).dependsOn(
     uri("git://github.com/koduki/mechanize.git"),
     uri("git://github.com/koduki/css-selectors-scala.git")
   )
