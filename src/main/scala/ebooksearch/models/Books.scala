@@ -84,16 +84,23 @@ class Books(val config: MyConfig) extends LoggingSupport {
 
   private def selectFromRakuten(item: Item): Book = {
     val rbs = new RakutenBooks(config.rakuten.developerId)
-    val title = item.title.replaceAll("【立ち読み版】", " ").replaceAll("【立ち読み版】", "")
+    val title = item.title
+      .replaceAll("【立ち読み版】", " ")
+      .replaceAll("【立ち読み版】", "")
+
     val author = item.author
       .replaceAll("\r\n", "")
       .replaceAll("\n", "")
       .replaceAll("著者：", "")
-      .replaceAll("イラスト：.*", "")
-      .replaceAll("漫画：", "")
-      .replaceAll("原作：", "")
-      .replaceAll("作画：.*", "")
+      .replaceAll("イラスト.*", "")
+      .replaceAll("漫画", "")
+      .replaceAll("原作", "")
+      .replaceAll("作画.*", "")
+      .replaceAll("作画.*", "")
+      .replaceAll("作者:", "")
+      .replaceAll("（著）", "")
       .replaceAll("／.*", "")
+      .replaceAll("×.*", "")
       .replaceAll("　", " ")
       .split(" ").first
 
@@ -101,7 +108,7 @@ class Books(val config: MyConfig) extends LoggingSupport {
     val results = rbs.search(title, author)
 
     if (results.isEmpty) {
-      info("%s is not found.".format(title))
+      info("title:%s, author:%s is not found.".format(title, author))
       Book(
         title = item.title,
         author = item.author,
