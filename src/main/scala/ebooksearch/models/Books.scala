@@ -9,6 +9,9 @@ import cn.orz.pascal.commons.utils.LoggingSupport
 import cn.orz.pascal.commons.utils.ConfigReader
 import cn.orz.pascal.commons.utils.LevenshteinDistance
 import cn.orz.pascal.commons.utils.DateUtils._
+import cn.orz.pascal.commons.utils.NetUtils._
+import cn.orz.pascal.mechanize._
+
 import com.mongodb.casbah.Imports._
 import com.novus.salat.global._
 import com.novus.salat._
@@ -157,5 +160,16 @@ class Books(val config: MyConfig) extends LoggingSupport {
       image = Image(result.image.small, result.image.medium, result.image.large, result.image.veryLarge, result.image.original),
       isbn = result.isbn,
       items = Set(item))
+  }
+
+  def getISBN(keyword: String) = {
+    import cn.orz.pascal.commons.utils.ISBN
+    val google = "http://www.google.co.jp/search?q="
+    val agent = new Mechanize()
+    def toASIN(html: String) = """amazon.*/dp/(.*?)"""".r.findFirstMatchIn(html) match { case Some(x) => x.group(1); case None => None }
+
+    val html = agent.get(google + utf8(keyword)).asXml.toString
+    toASIN(html)
+  //  ISBN.to13(toASIN(html))
   }
 }
