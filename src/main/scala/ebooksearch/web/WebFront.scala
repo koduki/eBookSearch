@@ -28,7 +28,7 @@ class WebFront extends BasicServlet {
     info("development mode is " + isDevelopmentMode)
 
     val feeds = Books(config).getFeeds(Providers.bookWalker, 8) ++ Books(config).getFeeds(Providers.paburi, 8) ++ Books(config).getFeeds(Providers.eBookJapan, 8)
-    val bookCount = BookDao.count()
+    val bookCount = BookDao.count("isbn" $ne "")
 
     jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> "Top:")
   }
@@ -36,7 +36,7 @@ class WebFront extends BasicServlet {
   get("/news/:provider_name") {
     val provider = Providers(params("provider_name"))
     val feeds = Books(config).getFeeds(provider, 100)
-    val bookCount = BookDao.count()
+    val bookCount =BookDao.count("isbn" $ne "")
 
     jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> ("新着:" + provider.name))
   }

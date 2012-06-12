@@ -111,18 +111,25 @@ class Books(val config: MyConfig) extends LoggingSupport {
     val results = rbs.search(title, author)
 
     if (results.isEmpty) {
-      info("title:%s, author:%s is not found.".format(title, author))
-      Book(
-        title = item.title,
-        author = item.author,
-        seriesName = "",
-        publisherName = "",
-        genre = "",
-        salesDate = "",
-        itemCaption = "",
-        image = Image(item.image_url, item.image_url, item.image_url, item.image_url, item.image_url),
-        isbn = "",
-        items = Set(item))
+      val book = getBookFromGoogle(title, author)
+
+      book match {
+        case Some(b) => buildBook(item, b)
+        case None => {
+          info("title:%s, author:%s is not found.".format(title, author))
+          Book(
+            title = item.title,
+            author = item.author,
+            seriesName = "",
+            publisherName = "",
+            genre = "",
+            salesDate = "",
+            itemCaption = "",
+            image = Image(item.image_url, item.image_url, item.image_url, item.image_url, item.image_url),
+            isbn = "",
+            items = Set(item))
+        }
+      }
 
     } else {
       val result = selectBestFitBook(item, results)
@@ -162,14 +169,37 @@ class Books(val config: MyConfig) extends LoggingSupport {
       items = Set(item))
   }
 
-  def getISBN(keyword: String) = {
+  def getBookFromGoogle(title: String, author: String):Option[RakutenItem] = {
+    debug("search from google [title=%s, author=%s].".format(title, author))
+
+    val isbn1 = getISBN(title)
+    val isbn2 = getISBN(title + " " + author)
+
+    if (isbn1 == isbn2) {
+      val rbs = new RakutenBooks(config.rakuten.developerId)
+      val results = rbs.search(isbn1)
+      if (results.isEmpty) {
+        info("not found [isbn=%s].".format(isbn1))
+
+        None
+      } else {
+        Some(results.first)
+      }
+    } else {
+      info("diff search result [title=%s, author=%s].".format(title, author))
+      None
+    }
+  }
+  def getISBN(keyword: String): String = {
     import cn.orz.pascal.commons.utils.ISBN
     val google = "http://www.google.co.jp/search?q="
     val agent = new Mechanize()
-    def toASIN(html: String) = """amazon.*/dp/(.*?)"""".r.findFirstMatchIn(html) match { case Some(x) => x.group(1); case None => None }
+    def toASIN(html: String) = """amazon.*/dp/(.*?)"""".r.findFirstMatchIn(html) match { case Some(x) => Some(x.group(1)); case None => None }
 
     val html = agent.get(google + utf8(keyword)).asXml.toString
-    toASIN(html)
-  //  ISBN.to13(toASIN(html))
+    toASIN(html) match {
+      case Some(asin) => ISBN.to13(asin)
+      case None => ""
+    }
   }
 }
