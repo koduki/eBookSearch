@@ -10,7 +10,9 @@ class NewItemCrawler extends LoggingSupport {
     val agents = List(
       new EBookJapanAgent,
       new BookWalkerAgent,
-      new PaburiAgent)
+      new PaburiAgent,
+      new KoboAgent
+      )
     val items = agents.map { agent =>
       loggingTime(
         "start clawling - " + agent.provider.name) {
