@@ -27,7 +27,10 @@ class WebFront extends BasicServlet {
   get("/") {
     info("development mode is " + isDevelopmentMode)
 
-    val feeds = Books(config).getFeeds(Providers.bookWalker, 8) ++ Books(config).getFeeds(Providers.paburi, 8) ++ Books(config).getFeeds(Providers.eBookJapan, 8)
+    val feeds = Books(config).getFeeds(Providers.bookWalker, 8) ++
+      Books(config).getFeeds(Providers.paburi, 8) ++
+      Books(config).getFeeds(Providers.eBookJapan, 8) ++
+      Books(config).getFeeds(Providers.kobo, 8)
     val bookCount = BookDao.count("isbn" $ne "")
 
     jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> "Top:")
@@ -36,7 +39,7 @@ class WebFront extends BasicServlet {
   get("/news/:provider_name") {
     val provider = Providers(params("provider_name"))
     val feeds = Books(config).getFeeds(provider, 100)
-    val bookCount =BookDao.count("isbn" $ne "")
+    val bookCount = BookDao.count("isbn" $ne "")
 
     jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> ("新着:" + provider.name))
   }
@@ -75,8 +78,7 @@ class WebFront extends BasicServlet {
       "nextBkw" -> (if (hasNextBKW) { 1 } else { 0 }),
       "nextEbj" -> (if (hasNextEBJ) { 1 } else { 0 }),
       "nextPbr" -> (if (hasNextPBR) { 1 } else { 0 }),
-      "nextKbo" -> (if (hasNextKBO) { 1 } else { 0 })
-      )
+      "nextKbo" -> (if (hasNextKBO) { 1 } else { 0 }))
   }
 
   post("/books/change") {
