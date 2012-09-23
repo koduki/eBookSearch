@@ -4,6 +4,7 @@
 -@ val nextBkw:Int
 -@ val nextEbj:Int
 -@ val nextPbr:Int
+-@ val nextKbo:Int
 link{:rel => "stylesheet/less", :href => "/css/search.less", :type => "text/css"}
 
 form#search{:action => "/search", :method => "get"}
@@ -11,16 +12,18 @@ form#search{:action => "/search", :method => "get"}
   input#bkw{:type => "hidden", :name => "bkw", :value => nextBkw}
   input#ebj{:type => "hidden", :name => "ebj", :value => nextEbj}
   input#pbr{:type => "hidden", :name => "pbr", :value => nextPbr}
+  input#kbo{:type => "hidden", :name => "kbo", :value => nextKbo}
+
   input{:type =>"submit", :value => "search"}
 section#result
   header 
     |検索結果 #{pageNumber}ページ目(#{books.size} 件)
     -if(pageNumber > 1)
-      a(href='#{"/search?q=" + query + "&page="+(pageNumber - 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber - 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr + "&kbo=" + nextKbo }')
         span#prev Prev
       span |
     -if(nextBkw == 1 || nextEbj == 1 || nextPbr == 1)
-      a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr + "&kbo=" + nextKbo }')
         span#next Next
 
   ul
@@ -36,9 +39,9 @@ section#result
   footer 
     |検索結果 #{pageNumber}ページ目(#{books.size} 件)
     -if(pageNumber > 1)
-      a(href='#{"/search?q=" + query + "&page="+(pageNumber - 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber - 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr + "&kbo=" + nextKbo}')
         span#prev Prev
       span |
     -if(nextBkw == 1 || nextEbj == 1 || nextPbr == 1)
-      a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr }')
+      a(href='#{"/search?q=" + query + "&page="+(pageNumber + 1) + "&bkw=" + nextBkw + "&ebj=" + nextEbj + "&pbr=" + nextPbr + "&kbo=" + nextKbo}')
         span#next Next

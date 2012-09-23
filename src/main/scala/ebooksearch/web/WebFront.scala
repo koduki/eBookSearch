@@ -3,7 +3,6 @@ package cn.orz.pascal.ebooksearch.web
 import org.scalatra._
 import java.net.URL
 import scalate.ScalateSupport
-
 import cn.orz.pascal.ebooksearch.models._
 import cn.orz.pascal.commons.utils.LoggingSupport
 import cn.orz.pascal.commons.utils.DateUtils._
@@ -20,6 +19,7 @@ import com.novus.salat.global._
 import com.novus.salat._
 import com.novus.salat.annotations._
 import com.novus.salat.global._
+import cn.orz.pascal.ebooksearch.agent.KoboAgent
 
 class WebFront extends BasicServlet {
   val config = ConfigReader[MyConfig]("config.scala")
@@ -47,11 +47,12 @@ class WebFront extends BasicServlet {
     var hasNextBKW = validateParam("bkw", true)
     var hasNextPBR = validateParam("pbr", true)
     var hasNextEBJ = validateParam("ebj", true)
-
+    var hasNextKBO = validateParam("kbo", true)
     val results = List(
       new BookWalkerAgent,
       new PaburiAgent,
-      new EBookJapanAgent)
+      new EBookJapanAgent,
+      new KoboAgent)
       .map(x => future { x.search(query, pageNumber) })
       .map(_())
 
@@ -63,6 +64,7 @@ class WebFront extends BasicServlet {
     hasNextBKW = hasNexts(0)
     hasNextPBR = hasNexts(1)
     hasNextEBJ = hasNexts(2)
+    hasNextKBO = hasNexts(3)
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 
@@ -72,7 +74,9 @@ class WebFront extends BasicServlet {
       "pageNumber" -> pageNumber,
       "nextBkw" -> (if (hasNextBKW) { 1 } else { 0 }),
       "nextEbj" -> (if (hasNextEBJ) { 1 } else { 0 }),
-      "nextPbr" -> (if (hasNextPBR) { 1 } else { 0 }))
+      "nextPbr" -> (if (hasNextPBR) { 1 } else { 0 }),
+      "nextKbo" -> (if (hasNextKBO) { 1 } else { 0 })
+      )
   }
 
   post("/books/change") {
