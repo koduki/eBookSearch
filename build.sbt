@@ -39,6 +39,8 @@ libraryDependencies += "net.debasishg" %% "sjson" % "0.17"
 
 libraryDependencies += "org.scala-tools.time" % "time_2.9.1" % "0.5"
 
+libraryDependencies += "org.scalaj" %% "scalaj-time" % "0.6"
+
 resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
 resolvers += "Sonatype OSS Public" at "http://oss.sonatype.org/content/groups/public/"

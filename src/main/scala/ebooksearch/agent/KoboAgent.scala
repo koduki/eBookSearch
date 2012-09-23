@@ -5,27 +5,42 @@ import se.fishtank.css.selectors.Selectors._
 import cn.orz.pascal.mechanize._
 import scala.xml.NodeSeq
 import scala.xml.Node
+import org.scala_tools.time.Imports._
 
 // vim: set ts=2 sw=2 et:
 class KoboAgent extends SimpleAgent {
   override def provider = Providers.kobo
 
   override def getNewItems(): List[Item] = {
-
     val agent = new Mechanize()
+    agent.isJavaScriptEnabled_=(false)
 
-    def get(pageNum: Int) = {
-      val url = "http://www.ebookjapan.jp/ebj/newlist.asp?genre_request=0&page=" + pageNum.toString
-      debug("url:%s".format(url))
+    val date = DateTime.yesterday.minusDays(1).toString("yyyy-MM-dd")
+    val url = "http://wakufactory.jp/kobo/new.php?d=" + date
+    val page = agent.get(url)
+    val urls = page.get(Class("nb")) \\ "td" \ "a" \\ "@href" map { x => x.text }
+
+    urls.map { url =>
+      info("url:%s".format(url))
 
       val page = agent.get(url)
-      val main_line = page.get(Id("main_line"))
-      val item_nodes = (main_line \\ "li").filter(item => (item \ "@class" text) == "heightLineChangeable")
+      val node = page.get(Class("SCContentFull"))
 
-      parse(item_nodes)
-    }
+      val title = (node $ ".KV2ItemVitals h1" text).trim
+      val author = (node $ "#h4Author ul li a" text).trim
+      val author_url = (node $ "#h4Author ul li a") \ "@href" text
+      val value = try {
+        (node $ ".KV2ItemDetails .KV2OurPrice strong" text).replaceAll("円", "").trim.toInt
+      } catch {
+        case e: NumberFormatException => {
+          warn(e)
+          0
+        }
+      }
+      val image_url = (node $ ".KV2ItemThumbImg img.KV2ItemThumb") \ "@src" text
 
-    (1 to 5).map(get(_)).toList.flatten
+      Item(title, url, value, author, author_url, image_url, provider)
+    }.toList
   }
 
   override protected def read(keyword: String, pageNumber: Int): Option[NodeSeq] = {
