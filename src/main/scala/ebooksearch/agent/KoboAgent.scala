@@ -64,7 +64,7 @@ class KoboAgent extends SimpleAgent {
   override protected def parse(nodes: NodeSeq): List[Item] = {
     nodes.map { node =>
       val title = node \\ "h3" \ "@title" text
-      val url = "http://rakuten.kobobooks.com" + ((node \\ "h3" \ "a").last \ "@href" text)
+      val url = "http://rakuten.kobobooks.com" + ((node \\ "h3" \ "a").last \ "@href" text).replaceAll("""\?s=.*"""", "")
       val author = (node $ ".Author>span>a" text).trim
       val author_url = "http://rakuten.kobobooks.com" + ((node $ ".Author>span>a").first \ "@href" text)
       val value = (node $ ".KV2OurPrice>strong").text.replaceAll("円", "").replaceAll(",", "").trim.toInt
