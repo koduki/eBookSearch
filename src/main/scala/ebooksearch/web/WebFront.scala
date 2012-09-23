@@ -61,7 +61,9 @@ class WebFront extends BasicServlet {
 
     val items = results.map { x => x._1 }.fold(List[Item]()) { (r, item) => r ++ item }
     val selecter = new Books(config)
-    val books = items.map { item => selecter.select(item) }.toSet
+    val books = items.map { item => selecter.select(item) }
+      .foldLeft(Map[com.mongodb.casbah.Imports.ObjectId, Book]()) { (r, x) => r + (x.id -> x) }
+      .values.toList
 
     val hasNexts = results.map { x => x._2 }
     hasNextBKW = hasNexts(0)
