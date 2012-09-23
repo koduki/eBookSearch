@@ -67,7 +67,14 @@ class KoboAgent extends SimpleAgent {
       val url = "http://rakuten.kobobooks.com" + ((node \\ "h3" \ "a").last \ "@href" text).replaceAll("""\?s=.*"""", "")
       val author = (node $ ".Author>span>a" text).trim
       val author_url = "http://rakuten.kobobooks.com" + ((node $ ".Author>span>a").first \ "@href" text)
-      val value = (node $ ".KV2OurPrice>strong").text.replaceAll("円", "").replaceAll(",", "").trim.toInt
+      val value = try {
+        (node $ ".KV2OurPrice strong" text).replaceAll("円", "").trim.toInt
+      } catch {
+        case e: NumberFormatException => {
+          warn(e)
+          0
+        }
+      }
       val image_url = (node \\ "img" \ "@src" text)
       Item(title, url, value, author, author_url, image_url, provider)
     }.toList

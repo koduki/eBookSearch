@@ -11,7 +11,7 @@
 		<servlet-class>cn.orz.pascal.ebooksearch.web.WebFront</servlet-class>
 		<init-param>
 			<param-name>org.scalatra.environment</param-name>
-			<param-value>development</param-value>
+			<param-value>production</param-value>
 		</init-param>
 	</servlet>
 	<servlet>
