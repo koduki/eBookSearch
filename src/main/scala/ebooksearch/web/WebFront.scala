@@ -28,9 +28,9 @@ class WebFront extends BasicServlet {
     info("development mode is " + isDevelopmentMode)
 
     val feeds = Books(config).getFeeds(Providers.bookWalker, 8) ++
+      Books(config).getFeeds(Providers.kobo, 8) ++
       Books(config).getFeeds(Providers.paburi, 8) ++
-      Books(config).getFeeds(Providers.eBookJapan, 8) ++
-      Books(config).getFeeds(Providers.kobo, 8)
+      Books(config).getFeeds(Providers.eBookJapan, 8)
     val bookCount = BookDao.count("isbn" $ne "")
 
     jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> "Top:")

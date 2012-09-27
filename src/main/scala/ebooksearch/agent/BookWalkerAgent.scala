@@ -63,9 +63,14 @@ class BookWalkerAgent extends SimpleAgent {
 
   override protected def parse(nodes: NodeSeq): List[Item] = {
     nodes.map { node =>
+      println((node $ "[class=detail] > [class=title] > a").text.trim + ":" + (node $ "[class=price] > strong").text.trim)
       val title = (node $ "[class=detail] > [class=title] > a").text.trim
       val url = (node $ "[class=detail] > [class=title] > a") attr "href"
-      val value = (node $ "[class=price] > strong").text.trim.toInt
+      val value = try {
+        (node $ "[class=price] > strong").text.trim.toInt
+      } catch {
+        case e: NumberFormatException => 0
+      }
       val author = (node $ "[class=detail] > [class=writer]").text.trim
       val author_url = ""
       val image_url = (node $ "[class=image] > a > img") attr "src"

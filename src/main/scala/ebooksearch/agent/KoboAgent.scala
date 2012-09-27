@@ -15,7 +15,7 @@ class KoboAgent extends SimpleAgent {
     val agent = new Mechanize()
     agent.isJavaScriptEnabled_=(false)
 
-    val date = DateTime.yesterday.minusDays(1).toString("yyyy-MM-dd")
+    val date = DateTime.yesterday.toString("yyyy-MM-dd")
     val url = "http://wakufactory.jp/kobo/new.php?d=" + date
     val page = agent.get(url)
     val urls = page.get(Class("nb")) \\ "td" \ "a" \\ "@href" map { x => x.text }
