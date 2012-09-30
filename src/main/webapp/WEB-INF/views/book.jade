@@ -10,6 +10,7 @@ p.message #{message}
 section#bookDetail
   header
     h1 #{book.title}
+
   section#contents
     h2
       span#author 作者: #{book.author} 
@@ -21,6 +22,15 @@ section#bookDetail
         li#salesDate 発売日:#{book.salesDate} 
         li#publisher 出版社:#{book.seriesName} - #{book.publisherName} 
   img#image(src="#{book.image.original}")
+  table#socialbar
+    tbody
+      tr
+        td.twitter
+          a{:href => "https://twitter.com/share", :class => "twitter-share-button", "data-url" => "Hello", "data-text" => "World", "data-via" => "koduki", "data-lang" => "ja"} ツイート
+        td.google
+          div{:class => "g-plusone", "data-size" => "none", "data-href" => "hoge"}
+        td.facebook
+          iframe{:src => "//www.facebook.com/plugins/like.php?href=http%3A%2F%2Flocalhost%3A8080%2Fbooks%2F506850b7559a404cc3533536&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21&amp;appId=361347227278534", :scrolling => "no", :frameborder => "0", :style => "border:none; overflow:hidden; width:450px; height:21px;", :allowTransparency => "true"}
 
 section#shops
   h2 取り扱いストア
@@ -43,3 +53,4 @@ section#shops
             input{:type => "text", :value => "", :name => "isbn"}
             input{:type =>"submit", :value => "別な本に付替える"}
 script{:src => "/coffee/book.coffee", :type => "text/coffeescript"}
+script{:src => "/js/socialbar.js", :type => "text/javascript"}
