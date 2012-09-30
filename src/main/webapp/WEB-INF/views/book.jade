@@ -26,11 +26,11 @@ section#bookDetail
     tbody
       tr
         td.twitter
-          a{:href => "https://twitter.com/share", :class => "twitter-share-button", "data-url" => "Hello", "data-text" => "World", "data-via" => "koduki", "data-lang" => "ja"} ツイート
+          a{:href => "https://twitter.com/share", :class => "twitter-share-button", "data-url" => {"http://www.e-ndex.net/books/" + book.id}, "data-text" => {"e-NDEX - とある電子の書籍検索 - " + book.title + " - "}, "data-lang" => "ja"} ツイート
         td.google
-          div{:class => "g-plusone", "data-size" => "none", "data-href" => "hoge"}
+          div{:class => "g-plusone", "data-size" => "none", "data-href" => {"http://www.e-ndex.net/books/" + book.id}}
         td.facebook
-          iframe{:src => "//www.facebook.com/plugins/like.php?href=http%3A%2F%2Flocalhost%3A8080%2Fbooks%2F506850b7559a404cc3533536&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21&amp;appId=361347227278534", :scrolling => "no", :frameborder => "0", :style => "border:none; overflow:hidden; width:450px; height:21px;", :allowTransparency => "true"}
+          iframe{:src => {"//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.e-ndex.net%2Fbooks%2F" + book.id + "&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21&amp;appId=434302016605508"}, :scrolling => "no", :frameborder => "0", :style => "border:none; overflow:hidden; width:450px; height:21px;", :allowTransparency => "true"}
 
 section#shops
   h2 取り扱いストア
