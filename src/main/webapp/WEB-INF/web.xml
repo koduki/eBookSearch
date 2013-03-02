@@ -11,7 +11,7 @@
 		<servlet-class>cn.orz.pascal.ebooksearch.web.WebFront</servlet-class>
 		<init-param>
 			<param-name>org.scalatra.environment</param-name>
-			<param-value>production</param-value>
+			<param-value>development</param-value>
 		</init-param>
 	</servlet>
 	<servlet>
@@ -22,7 +22,7 @@
 
 	<servlet-mapping>
 		<servlet-name>resource</servlet-name>
-		<url-pattern>/images/*</url-pattern>
+		<url-pattern>/img/*</url-pattern>
 		<url-pattern>/css/*</url-pattern>
 		<url-pattern>/js/*</url-pattern>
         <url-pattern>/coffee/*</url-pattern>

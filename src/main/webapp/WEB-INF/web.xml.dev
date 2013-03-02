@@ -22,7 +22,7 @@
 
 	<servlet-mapping>
 		<servlet-name>resource</servlet-name>
-		<url-pattern>/images/*</url-pattern>
+		<url-pattern>/img/*</url-pattern>
 		<url-pattern>/css/*</url-pattern>
 		<url-pattern>/js/*</url-pattern>
         <url-pattern>/coffee/*</url-pattern>

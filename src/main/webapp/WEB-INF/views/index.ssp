@@ -1,0 +1,42 @@
+<% import cn.orz.pascal.commons.utils.CollectionUtils._ %> 
+<%@ var feeds: List[((cn.orz.pascal.ebooksearch.models.Provider, java.util.Date), Set[cn.orz.pascal.ebooksearch.models.Book])] %>
+<%@ var bookCount: Long %>
+<div class="" style="padding-top:30px;">
+    <p>
+        e-NDEXはBook☆Walker, Kobo, パブリ, eBook Japanといった複数のサービスの電子書籍を横断検索することができます。
+    </p>
+    <p>
+        現在、保管されている電子書籍は ${bookCount} 冊です。
+    </p>
+    <form class="form-search">
+        <input id="q" type="text" name="q" class="input-xxlarge search-query"/>
+        <button>
+            <i class="icon-search"></i>検索
+        </button>
+    </form>
+</div>
+<div class="row-fluid">
+    #for (feed <- feeds)
+    <div class="bookinfo">
+        <h3 style="border: solid;border-width: 0px 0px 1px 10px;padding: 5px;border-color: #BBB;">
+            <a href="${feed._1._1.url}" style="margin-right:15px">
+                ${feed._1._2} - ${feed._1._1.name}</a>
+                <a href="/news/${feed._1._1.name}" class="btn" style="left:10px">More</a></h3>
+        <% val records = splitGroup(4)(feed._2.toList) %>
+        #for (record <- records)
+        <ul class="thumbnails">
+            #for (item <- record)
+            <li class="span3">
+                <div class="thumbnail">
+                    <img style="max-height: 200px;max-width: 200px;" src="${item.image.large}" alt="${item.title} Image">
+                    <div class="caption">
+                        <h5><a href="/books/${item.id}">${item.title} </a></h5>
+                    </div>
+                </div>
+            </li>
+            #end
+        </ul>
+        #end
+    </div>
+    #end
+</div>
