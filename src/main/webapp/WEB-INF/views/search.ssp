@@ -1,0 +1,54 @@
+<% import cn.orz.pascal.commons.utils.CollectionUtils._ %>
+<%@ val books: List[cn.orz.pascal.ebooksearch.models.Book] %>
+<%@ val query:String = params("q") %>
+<%@ val pageNumber:Int %>
+<%@ val nextBkw:Int %>
+<%@ val nextEbj:Int %>
+<%@ val nextPbr:Int %>
+<%@ val nextKbo:Int %>
+
+<div class="" style="padding-top:30px;">
+    <p>
+        e-NDEXはBook☆Walker, Kobo, パブリ, eBook Japanといった複数のサービスの電子書籍を横断検索することができます。
+    </p>
+    <form class="form-search" action="/search">
+        <input id="q" type="text" name="q" value="${query}" class="input-xxlarge search-query"/>
+        <button>
+            <i class="icon-search"></i>検索
+        </button>
+    </form>
+</div>
+<header>
+<p>検索結果 ${pageNumber}ページ目(${books.size} 件)</p>
+    #if (pageNumber > 1)
+      <a href="/search?q=${query}&page=${pageNumber - 1}&bkw=${nextBkw}&ebj=${nextEbj}&pbr=${nextPbr}&kbo=${nextKbo}")
+       Prev
+   </a>
+      |
+     #end
+     #if (nextBkw == 1 || nextEbj == 1 || nextPbr == 1)
+      <a href="/search?q=${query}&page=${pageNumber + 1}&bkw=${nextBkw}&ebj=${nextEbj}&pbr=${nextPbr}&kbo=${nextKbo}")
+        Next
+        </a>
+     #end
+
+</header>
+<div class="row-fluid">
+    <div class="result">
+        <% val records = splitGroup(4)(books.toList) %>
+        #for (record <- records)
+        <ul class="thumbnails">
+            #for (item <- record)
+            <li class="span3">
+                <div class="thumbnail">
+                    <a href="/books/${item.id}"><img style="max-height: 200px;max-width: 200px;" src="${item.image.large}" alt="${item.title} Image"></a>
+                    <div class="caption">
+                        <h5><a href="/books/${item.id}">${item.title}</a></h5>
+                    </div>
+                </div>
+            </li>
+            #end
+        </ul>
+        #end
+    </div>
+</div>
