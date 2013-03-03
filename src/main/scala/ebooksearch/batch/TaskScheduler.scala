@@ -9,8 +9,8 @@ import org.quartz.TriggerBuilder.newTrigger
 import org.quartz.SimpleScheduleBuilder.simpleSchedule
 import cn.orz.pascal.commons.utils.LoggingSupport
 
-class NewItemCrawlerJob extends Job with LoggingSupport {
-  def execute(context: JobExecutionContext) {
+class NewItemCrawlerJob extends LoggingSupport {
+  def execute() {
     loggingTime(
       "START_JOB: clawling") {
         val crawler = new NewItemCrawler()
