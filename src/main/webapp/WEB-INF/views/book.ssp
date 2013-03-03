@@ -1,0 +1,79 @@
+<% import cn.orz.pascal.commons.utils.CollectionUtils._ %>
+<%@ var book: cn.orz.pascal.ebooksearch.models.Book %>
+<%@ val message: String%>
+<div class="" style="padding-top:30px;">
+    <p>
+        e-NDEXはBook☆Walker, Kobo, パブリ, eBook Japanといった複数のサービスの電子書籍を横断検索することができます。
+    </p>
+    <form class="form-search">
+        <input id="q" type="text" name="q" action="/search" class="input-xxlarge search-query"/>
+        <button>
+            <i class="icon-search"></i>検索
+        </button>
+    </form>
+</div>
+<div class="row-fluid">
+    <div class="span4">
+        <h1>${book.title}</h1>
+        <img id="image" style="margin-left: 50px;max-height: 260px;max-width: 260px;" src="${book.image.original}" />
+    </div>
+    <div class="span5">
+        <h2 style="font-size: 18px;"><span id="author">作者: ${book.author}</span></h2>
+        <p id="detail">
+            ${book.itemCaption}
+        </p>
+        <ul id="info" class="unstyled">
+            <li id="genre">
+                ${book.genre}
+            </li>
+            <li id="isbn">
+                ISBN:${book.isbn}
+            </li>
+            <li id="salesDate">
+                発売日:${book.salesDate}
+            </li>
+            <li id="publisher">
+                出版社:${book.seriesName} - ${book.publisherName}
+            </li>
+        </ul>
+    </div>
+</div>
+<table id="socialbar">
+    <tbody>
+        <tr>
+            <td class="twitter"><a class="twitter-share-button" href="https://twitter.com/share" data-url="http://www.e-ndex.net/books/${book.id}" data-text="e-NDEX - とある電子の書籍検索 - ${book.title} " data-lang="ja">ツイート</a></td>
+            <td class="google"><div class="g-plusone" data-size="none" data-href="http://www.e-ndex.net/books/${book.id}"></div></td>
+            <td class="facebook"><iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.e-ndex.net%2Fbooks%2F${book.id}&amp;amp;send=false&amp;amp;layout=button_count&amp;amp;width=450&amp;amp;show_faces=true&amp;amp;action=like&amp;amp;colorscheme=light&amp;amp;font&amp;amp;height=21&amp;amp;appId=434302016605508" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe></td>
+        </tr>
+    </tbody>
+</table>
+<section id="shops">
+    <h3 style="color:black;border: solid;border-width: 0px 0px 1px 10px;padding: 5px;border-color: #BBB;margin-top:30px">取り扱いストア</h3>
+    <ul class="unstyled">
+        #for (item <- book.items)
+        <li>
+            <div class="row-fluid">
+                <div class="span4">
+                    <a href="${item.url}">${item.provider.name} - ${item.title}</a>
+                </div>
+                <div class="span8">
+                    <form action="/books/change" method="post" class="form-inline">
+                        <input type="hidden" value="${item.title}" name="title"/>
+                        <input type="hidden" value="${item.url}" name="url"/>
+                        <input type="hidden" value="${item.value}" name="value"/>
+                        <input type="hidden" value="${item.author}" name="author"/>
+                        <input type="hidden" value="${item.author_url}" name="author_url"/>
+                        <input type="hidden" value="${item.image_url}" name="image_url"/>
+                        <input type="hidden" value="${item.provider.name}" name="provider_name"/>
+                        <input type="hidden" value="${book.id}" name="oid"/>
+                        <p class="isbn">
+                            <label>ISBN:</label>
+                            <input type="text" value="" name="isbn" placeholder="New ISBN" class="input-medium" />
+                            <input type="submit" value="別な本に付替える" class="btn"/>
+                        </p>
+                    </form>
+                </div>
+        </li>
+        #end
+    </ul>
+</section>
