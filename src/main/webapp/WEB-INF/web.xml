@@ -14,11 +14,6 @@
 			<param-value>production</param-value>
 		</init-param>
 	</servlet>
-	<servlet>
-		<servlet-name>cron</servlet-name>
-		<servlet-class>cn.orz.pascal.ebooksearch.batch.TaskScheduler</servlet-class>
-		<load-on-startup>0</load-on-startup>
-	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>resource</servlet-name>
