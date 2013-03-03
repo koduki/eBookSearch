@@ -5,8 +5,8 @@
     <p>
         e-NDEXはBook☆Walker, Kobo, パブリ, eBook Japanといった複数のサービスの電子書籍を横断検索することができます。
     </p>
-    <form class="form-search">
-        <input id="q" type="text" name="q" action="/search" class="input-xxlarge search-query"/>
+    <form class="form-search" action="/search">
+        <input id="q" type="text" name="q" class="input-xxlarge search-query"/>
         <button>
             <i class="icon-search"></i>検索
         </button>

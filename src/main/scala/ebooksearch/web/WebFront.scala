@@ -41,7 +41,7 @@ class WebFront extends BasicServlet {
     val feeds = Books(config).getFeeds(provider, 100)
     val bookCount = BookDao.count("isbn" $ne "")
 
-    jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> ("新着:" + provider.name))
+    ssp("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> ("新着:" + provider.name))
   }
 
   get("/search") {
@@ -73,7 +73,7 @@ class WebFront extends BasicServlet {
 
     QueryLogDao.insert(QueryLog(query, items, new java.util.Date()))
 
-    jade("search",
+    ssp("search",
       "books" -> books,
       "title" -> "検索結果",
       "pageNumber" -> pageNumber,
