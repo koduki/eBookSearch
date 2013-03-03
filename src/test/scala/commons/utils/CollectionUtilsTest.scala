@@ -16,4 +16,11 @@ class CollectionUtilsTest extends WordSpec with ShouldMatchers {
       CollectionUtils.splitGroup(2)(List('a', 'b', 'c', 'd', 'e')) should be(List(List('a', 'b'), List('c', 'd'), List('e')))
     }
   }
+
+  "splitGroup(1)(Set[1, 2]" should {
+    "be ([1], [2)" in {
+      CollectionUtils.splitGroup(1)(Set(1, 2)) should be(Set(Set(1), Set(2)))
+    }
+  }
+  
 }

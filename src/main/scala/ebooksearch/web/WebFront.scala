@@ -33,7 +33,7 @@ class WebFront extends BasicServlet {
       Books(config).getFeeds(Providers.eBookJapan, 8)
     val bookCount = BookDao.count("isbn" $ne "")
 
-    jade("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> "Top:")
+    ssp("index", "feeds" -> feeds, "bookCount" -> bookCount, "title" -> "Top")
   }
 
   get("/news/:provider_name") {
@@ -126,7 +126,7 @@ class WebFront extends BasicServlet {
     if (book == null) {
       resourceNotFound()
     } else {
-      jade("book", "book" -> book, "title" -> book.title, "message" -> message)
+      ssp("book", "book" -> book, "title" -> book.title, "message" -> message)
     }
   }
 
