@@ -135,10 +135,14 @@ class WebFront extends BasicServlet {
     contentType = "text/javascript"
     "{a:'b'}"
   }
-  
-  get("/rpc/execute_batch"){
-    (new NewItemCrawlerJob).execute
-    "finish"
+
+  get("/rpc/execute_batch") {
+    try {
+      (new NewItemCrawlerJob).execute
+      "finish"
+    } catch {
+      case e: Exception => e.printStackTrace();
+    }
   }
 
   notFound {

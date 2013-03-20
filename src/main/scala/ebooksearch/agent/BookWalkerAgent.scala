@@ -25,14 +25,19 @@ class BookWalkerAgent extends SimpleAgent {
       ("ct102" -> "ケータイ小説"))
 
     def getItems(category: String) = {
-      (1 to 3).map { pageNumber =>
-        val queryUrl = "http://bookwalker.jp/pc/list/category/" + category + "?detail=1&order=release&disp=40&page=" + pageNumber;
-        debug("url:%s".format(queryUrl))
+      (1 to 5).map { pageNumber =>
+        val queryUrl = "http://bookwalker.jp/pc/list/category/" + category + "/?detail=1&order=release&disp=40&page=" + pageNumber;
+        info("url1:%s".format(queryUrl))
 
         val page = agent.get(queryUrl)
-        Thread.sleep(1500)
+        try {
+          info("wait 30 sec...")
+          Thread.sleep(30 * 1000)
+        } catch {
+          case e: Exception => e.printStackTrace
+        }
         val nodes = (page.asXml $ ".itemWrap")
-        info("url:%s, size:%s".format(queryUrl, nodes.size))
+        info("url2:%s, size:%s".format(queryUrl, nodes.size))
 
         parse(nodes)
       }.toList.flatten
@@ -63,20 +68,27 @@ class BookWalkerAgent extends SimpleAgent {
 
   override protected def parse(nodes: NodeSeq): List[Item] = {
     nodes.map { node =>
-      println((node $ "[class=detail] > [class=title] > a").text.trim + ":" + (node $ "[class=price] > strong").text.trim)
-      val title = (node $ "[class=detail] > [class=title] > a").text.trim
-      val url = (node $ "[class=detail] > [class=title] > a") attr "href"
-      val value = try {
-        (node $ "[class=price] > strong").text.trim.toInt
-      } catch {
-        case e: NumberFormatException => 0
-      }
-      val author = (node $ "[class=detail] > [class=writer]").text.trim
-      val author_url = ""
-      val image_url = (node $ "[class=image] > a > img") attr "src"
+      try {
+        println((node $ "[class=detail] > [class=title] > a").text.trim + ":" + (node $ "[class=price] > strong").text.trim)
+        val title = (node $ "[class=detail] > [class=title] > a").text.trim
+        val url = (node $ "[class=detail] > [class=title] > a") attr "href"
+        val value = try {
+          (node $ "[class=price] > strong").text.trim.toInt
+        } catch {
+          case e: NumberFormatException => 0
+        }
+        val author = (node $ "[class=detail] > [class=writer]").text.trim
+        val author_url = ""
+        val image_url = (node $ "[class=image] > a > img") attr "src"
 
-      Item(title, url, value, author, author_url, image_url, provider)
-    }.toList
+        Item(title, url, value, author, author_url, image_url, provider)
+      } catch {
+        case e: Exception => {
+          e.printStackTrace();
+          null;
+        }
+      }
+    }.toList.filter(_ != null)
   }
 
 }

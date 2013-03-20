@@ -8,9 +8,9 @@ import cn.orz.pascal.commons.utils.LoggingSupport
 class NewItemCrawler extends LoggingSupport {
   def crawl() {
     val agents = List(
-      new EBookJapanAgent,
-      new BookWalkerAgent,
-      new PaburiAgent,
+//      new EBookJapanAgent,
+//      new BookWalkerAgent,
+//      new PaburiAgent,
       new KoboAgent
       )
     val items = agents.map { agent =>

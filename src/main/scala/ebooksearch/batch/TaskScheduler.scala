@@ -18,28 +18,3 @@ class NewItemCrawlerJob extends LoggingSupport {
       }("END_JOB: clawling, proc time: %time (ms)")
   }
 }
-
-//object NewItemCrawlerJob {
-//  //def schdule = simpleSchedule.repeatForever.withIntervalInHours(24)
-//}
-//
-//class TaskScheduler extends HttpServlet {
-//  val scheduler = StdSchedulerFactory.getDefaultScheduler();
-//
-//  def regist() {
-//    val job = newJob(classOf[NewItemCrawlerJob]).build();
-//    val trigger = newTrigger().withSchedule(NewItemCrawlerJob.schdule).build();
-//
-//    scheduler.scheduleJob(job, trigger);
-//  }
-//
-//  override def init() {
-//    try {
-//      scheduler.start();
-//      regist()
-//    } catch {
-//      case e: SchedulerException => e.printStackTrace()
-//    }
-//  }
-//
-//}
