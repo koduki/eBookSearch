@@ -6,13 +6,11 @@ import cn.orz.pascal.ebooksearch.models._
 import cn.orz.pascal.commons.utils.LoggingSupport
 
 class NewItemCrawler extends LoggingSupport {
-  def crawl() {
-    val agents = List(
-//      new EBookJapanAgent,
-//      new BookWalkerAgent,
-//      new PaburiAgent,
-      new KoboAgent
-      )
+  def getKobo() = crawl(List(new KoboAgent))
+  def getBookWlaker() = crawl(List(new BookWalkerAgent))
+  def getPaburiAgent() = crawl(List(new PaburiAgent))
+
+  def crawl(agents:List[Agent]) {
     val items = agents.map { agent =>
       loggingTime(
         "start clawling - " + agent.provider.name) {

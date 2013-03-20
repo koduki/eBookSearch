@@ -20,7 +20,6 @@ import com.novus.salat._
 import com.novus.salat.annotations._
 import com.novus.salat.global._
 import cn.orz.pascal.ebooksearch.agent.KoboAgent
-import cn.orz.pascal.ebooksearch.batch.NewItemCrawlerJob
 
 class WebFront extends BasicServlet {
   val config = ConfigReader[MyConfig]("config.scala")
@@ -134,15 +133,6 @@ class WebFront extends BasicServlet {
   get("/api/books") {
     contentType = "text/javascript"
     "{a:'b'}"
-  }
-
-  get("/rpc/execute_batch") {
-    try {
-      (new NewItemCrawlerJob).execute
-      "finish"
-    } catch {
-      case e: Exception => e.printStackTrace();
-    }
   }
 
   notFound {
