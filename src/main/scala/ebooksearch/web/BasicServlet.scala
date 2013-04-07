@@ -60,7 +60,8 @@ trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSuppo
         name match {
           case "kobo_crawler" => (new NewItemCrawler).getKobo
           case "bookwalker_crawler" => (new NewItemCrawler).getBookWlaker
-          case "paburi_crawler" => (new NewItemCrawler).getPaburiAgent
+          case "ebookjapan_crawler" => (new NewItemCrawler).getEBookJapan
+          case "paburi_crawler" => (new NewItemCrawler).getPaburi
           case "cleanUp" => (new Books(null)).cleanUp
         }
       } catch {

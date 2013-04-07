@@ -41,7 +41,7 @@
 <table id="socialbar">
     <tbody>
         <tr>
-            <td class="twitter"><a class="twitter-share-button" href="https://twitter.com/share" data-url="http://www.e-ndex.net/books/${book.id}" data-text="e-NDEX - とある電子の書籍検索 - ${book.title} #e-ndex" data-lang="ja">ツイート</a></td>
+            <td class="twitter"><a class="twitter-share-button" href="https://twitter.com/share" data-url="http://www.e-ndex.net/books/${book.id}" data-text="e-NDEX - とある電子の書籍検索 - ${book.title} #endex" data-lang="ja">ツイート</a></td>
             <td class="google"><div class="g-plusone" data-size="none" data-href="http://www.e-ndex.net/books/${book.id}"></div></td>
             <td class="facebook"><iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.e-ndex.net%2Fbooks%2F${book.id}&amp;amp;send=false&amp;amp;layout=button_count&amp;amp;width=450&amp;amp;show_faces=true&amp;amp;action=like&amp;amp;colorscheme=light&amp;amp;font&amp;amp;height=21&amp;amp;appId=434302016605508" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe></td>
         </tr>

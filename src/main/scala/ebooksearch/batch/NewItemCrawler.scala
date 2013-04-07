@@ -4,11 +4,13 @@ package cn.orz.pascal.ebooksearch.batch
 import cn.orz.pascal.ebooksearch.agent._
 import cn.orz.pascal.ebooksearch.models._
 import cn.orz.pascal.commons.utils.LoggingSupport
+import cn.orz.pascal.ebooksearch.agent.EBookJapanAgent
 
 class NewItemCrawler extends LoggingSupport {
   def getKobo() = crawl(List(new KoboAgent))
   def getBookWlaker() = crawl(List(new BookWalkerAgent))
-  def getPaburiAgent() = crawl(List(new PaburiAgent))
+  def getPaburi() = crawl(List(new PaburiAgent))
+  def getEBookJapan() = crawl(List(new EBookJapanAgent))
 
   def crawl(agents:List[Agent]) {
     val items = agents.map { agent =>
