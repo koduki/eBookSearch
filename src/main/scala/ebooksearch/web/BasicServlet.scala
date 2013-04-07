@@ -61,6 +61,7 @@ trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSuppo
           case "kobo_crawler" => (new NewItemCrawler).getKobo
           case "bookwalker_crawler" => (new NewItemCrawler).getBookWlaker
           case "paburi_crawler" => (new NewItemCrawler).getPaburiAgent
+          case "cleanUp" => (new Books(null)).cleanUp
         }
       } catch {
         case e: Exception =>

@@ -34,6 +34,8 @@ class Books(val config: MyConfig) extends LoggingSupport {
         }
 
         val another = BookDao.find(MongoDBObject("isbn" -> isbn)).toList
+        debug("books count is %s".format(another.size))
+
         val book = if (another.isEmpty) {
           val rbs = new RakutenBooks(config.rakuten.developerId)
           val results = rbs.search(isbn)
@@ -88,8 +90,8 @@ class Books(val config: MyConfig) extends LoggingSupport {
   private def selectFromRakuten(item: Item): Book = {
     val rbs = new RakutenBooks(config.rakuten.developerId)
     val title = item.title
-      .replaceAll("【立ち読み版】", " ")
       .replaceAll("【立ち読み版】", "")
+      .replaceAll("【電子特別版】", "")
 
     val author = item.author
       .replaceAll("\r\n", "")
@@ -156,6 +158,7 @@ class Books(val config: MyConfig) extends LoggingSupport {
   }
 
   private def buildBook(item: Item, result: RakutenItem): cn.orz.pascal.ebooksearch.models.Book = {
+    Book
     Book(
       title = result.title,
       author = result.author,
@@ -169,7 +172,7 @@ class Books(val config: MyConfig) extends LoggingSupport {
       items = Set(item))
   }
 
-  def getBookFromGoogle(title: String, author: String):Option[RakutenItem] = {
+  def getBookFromGoogle(title: String, author: String): Option[RakutenItem] = {
     debug("search from google [title=%s, author=%s].".format(title, author))
 
     val isbn1 = getISBN(title)
@@ -190,6 +193,7 @@ class Books(val config: MyConfig) extends LoggingSupport {
       None
     }
   }
+
   def getISBN(keyword: String): String = {
     import cn.orz.pascal.commons.utils.ISBN
     val google = "http://www.google.co.jp/search?q="
@@ -200,6 +204,19 @@ class Books(val config: MyConfig) extends LoggingSupport {
     toASIN(html) match {
       case Some(asin) => ISBN.to13(asin)
       case None => ""
+    }
+  }
+
+  def cleanUp() = {
+    val nativeBooks = MongoConnection()("test")("books")
+    nativeBooks.distinct("isbn", "isbn" $ne "").foreach { (isbn) =>
+      val books = BookDao.find(MongoDBObject("isbn" -> isbn)).toList
+      info("isbn is %s, count %d".format(isbn, books.size))
+      val result = books.tail.foldLeft(books.first) { (r, x) =>
+        x.items.foldLeft(r) { (book, item) => book.addItem(item) }
+      }
+      BookDao.save(result)
+      books.tail.foreach(BookDao.remove(_))
     }
   }
 }
