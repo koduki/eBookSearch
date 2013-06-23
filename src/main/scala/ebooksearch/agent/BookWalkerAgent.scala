@@ -25,7 +25,7 @@ class BookWalkerAgent extends SimpleAgent {
       ("ct102" -> "ケータイ小説"))
 
     def getItems(category: String) = {
-      (1 to 5).map { pageNumber =>
+      (1 to 50).map { pageNumber =>
         val queryUrl = "http://bookwalker.jp/pc/list/category/" + category + "/?detail=1&order=release&disp=40&page=" + pageNumber;
         info("url1:%s".format(queryUrl))
 
