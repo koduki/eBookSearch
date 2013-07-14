@@ -83,7 +83,7 @@ class Books(val config: MyConfig) extends LoggingSupport {
         val list = if (r.contains((provider, createdAt))) { r(provider, createdAt) } else { List[Item]() }
         r + ((provider, createdAt) -> (list ++ List(x.item)))
       }.map { x =>
-        x._1 -> x._2.map(item => selecter.select(item)).toSet
+        x._1 -> x._2.map(item => selecter.select(item)).toSet.toList.sort((x, y) => x.title > y.title)
       }.toList.sort((x, y) => x._1._2 > y._1._2)
   }
 
@@ -195,16 +195,13 @@ class Books(val config: MyConfig) extends LoggingSupport {
   }
 
   def getISBN(keyword: String): String = {
-    info("debub01:isbn : " + keyword)
     import cn.orz.pascal.commons.utils.ISBN
     val google = "http://www.google.co.jp/search?q="
     val agent = new Mechanize()
     agent.isJavaScriptEnabled_=(false)
     def toASIN(html: String) = """amazon.*/dp/(.*?)"""".r.findFirstMatchIn(html) match { case Some(x) => Some(x.group(1)); case None => None }
-    info("debub02:isbn : " + keyword)
 
     val html = agent.get(google + utf8(keyword)).asXml.toString
-        info("debub05:isbn : %s", html)
 
     toASIN(html) match {
       case Some(asin) => ISBN.to13(asin)

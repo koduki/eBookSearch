@@ -72,4 +72,5 @@ trait BasicServlet extends ScalatraServlet with ScalateSupport with LoggingSuppo
 
     }("EVENT:END_JOB\tNAME:clawling\tPROC_TIME:%time (ms)")
   }
+
 }
